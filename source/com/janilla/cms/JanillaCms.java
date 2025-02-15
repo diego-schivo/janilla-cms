@@ -23,7 +23,6 @@
  */
 package com.janilla.cms;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,11 +35,12 @@ import com.janilla.http.HttpHandler;
 import com.janilla.http.HttpProtocol;
 import com.janilla.net.Net;
 import com.janilla.net.Server;
+import com.janilla.persistence.ApplicationPersistenceBuilder;
+import com.janilla.persistence.Persistence;
 import com.janilla.reflect.Factory;
 import com.janilla.util.Util;
 import com.janilla.web.ApplicationHandlerBuilder;
 import com.janilla.web.Handle;
-import com.janilla.web.JsonRenderer;
 import com.janilla.web.Render;
 
 public class JanillaCms {
@@ -80,7 +80,7 @@ public class JanillaCms {
 
 	public Factory factory;
 
-//	public Persistence persistence;
+	public Persistence persistence;
 
 	public HttpHandler handler;
 
@@ -89,13 +89,13 @@ public class JanillaCms {
 		factory = new Factory();
 		factory.setTypes(Util.getPackageClasses(getClass().getPackageName()).toList());
 		factory.setSource(this);
-//		{
-//			var p = configuration.getProperty("janilla-cms.database.file");
-//			if (p.startsWith("~"))
-//				p = System.getProperty("user.home") + p.substring(1);
-//			var pb = factory.create(ApplicationPersistenceBuilder.class, Map.of("databaseFile", Path.of(p)));
-//			persistence = pb.build();
-//		}
+		{
+			var p = configuration.getProperty("janilla-cms.database.file");
+			if (p.startsWith("~"))
+				p = System.getProperty("user.home") + p.substring(1);
+			var pb = factory.create(ApplicationPersistenceBuilder.class, Map.of("databaseFile", Path.of(p)));
+			persistence = pb.build();
+		}
 		handler = factory.create(ApplicationHandlerBuilder.class).build();
 	}
 
@@ -103,16 +103,12 @@ public class JanillaCms {
 		return this;
 	}
 
-	@Handle(method = "GET", path = "/")
-	public Index index() throws IOException {
-		return new Index(new State());
+	@Handle(method = "GET", path = "(/[\\w\\d/-]*)")
+	public Index index() {
+		return new Index(); // persistence.crud(Header.class).read(1));
 	}
 
 	@Render(template = "index.html")
-	public record Index(State state) {
-	}
-
-	@Render(renderer = JsonRenderer.class)
-	public record State() {
+	public record Index() { // Header header) {
 	}
 }

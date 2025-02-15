@@ -1,0 +1,39 @@
+.admin {
+  body {
+    background: rgb(20, 20, 20);
+  }
+
+  button {
+    align-self: start;
+  }
+
+  form {
+	padding: 1rem;
+  }
+
+  form,
+  label:has(input:not([type])),
+  li,
+  ol {
+    display: flex;
+    flex-direction: column;
+  }
+
+  form,
+  ol,
+  li {
+    gap: 1rem;
+  }
+
+  label {
+    gap: 0.25rem;
+  }
+
+  /*
+  li {
+    border: 1px solid rgb(74, 74, 74);
+    border-radius: 0.25rem;
+	padding: 1rem;
+  }
+  */
+}

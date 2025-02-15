@@ -1,0 +1,39 @@
+<ul>
+  <!--${items}-->
+</ul>
+<template id="item">
+  <li>
+    <!--${field}-->
+  </li>
+</template>
+<template id="text">
+  <text-field data-path="${path}" data-key="${key}"></text-field>
+</template>
+<template id="list">
+  <h3>${label}</h3>
+  <list-field data-path="${path}" data-key="${key}"></list-field>
+</template>
+<template id="object">
+  <h3>${label}</h3>
+  <object-field data-path="${path}" data-key="${key}"></object-field>
+</template>
+<template id="checkbox">
+  <checkbox-field data-path="${path}" data-key="${key}"></text-field>
+</template>
+<template id="tabs">
+  <tabs-field data-key="${key}">
+    <div role="tablist">
+      <!--${buttons}-->
+    </div>
+    <!--${panels}-->
+  </tabs-field>
+</template>
+<template id="tabs-button">
+  <button type="button" role="tab" aria-selected="false" aria-controls="panel-${index}">${label}</button>
+</template>
+<template id="tabs-panel">
+  <div id="panel-${index}" role="tabpanel" hidden>
+    <!--${field}-->
+  </div>
+</template>
+<input type="hidden" name="${path}.$type" value="${type}" />

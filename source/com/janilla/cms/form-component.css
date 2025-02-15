@@ -1,0 +1,15 @@
+form-component {
+  form,
+  label {
+    display: flex;
+    flex-direction: column;
+  }
+
+  form {
+    gap: 1rem;
+  }
+
+  label {
+    gap: 0.25rem;
+  }
+}

@@ -1,0 +1,102 @@
+{
+	"header": {
+		"$type": "Header",
+		"id": 1,
+		"navItems": [
+			{
+				"$type": "Link",
+				"url": "/posts",
+				"label": "Posts",
+				"appearance": ""
+			},
+			{
+				"$type": "Link",
+				"url": "/contact",
+				"label": "Contact",
+				"appearance": ""
+			}
+		]
+	},
+	"pages": [
+		{
+			"$type": "Page",
+			"id": 1,
+			"title": "Home",
+			"hero": {
+				"$type": "Hero",
+				"type": "highImpact",
+				"richText": "<h1>Payload Website Template</h1><p><a href=\"/admin\">Visit the admin dashboard</a> to begin managing this site's content. The code for this template is completely open-source and can be found <a href=\"https://github.com/payloadcms/payload/tree/main/templates/website\" rel=\"noopener noreferrer\" target=\"_blank\">on our Github</a>. </p>",
+				"links": [
+					{
+						"$type": "Link",
+						"url": "/posts",
+						"label": "All posts",
+						"appearance": "default"
+					},
+					{
+						"$type": "Link",
+						"url": "/contact",
+						"label": "Contact",
+						"appearance": "outline"
+					}
+				]
+			},
+			"layout": [
+				{
+					"$type": "Content",
+					"columns": [
+						{
+							"$type": "Column",
+							"richText": "<h2>Core features</h2>"
+						},
+						{
+							"$type": "Column",
+							"richText": "<h3>Admin Dashboard</h3><p>Manage this site's pages and posts from the <a href=\"/admin\">admin dashboard</a>.</p>"
+						}
+					]
+				},
+				{
+					"$type": "Media",
+					"url": "/images/image-post2.webp",
+					"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+				},
+				{
+					"$type": "Archive",
+					"introContent": "<h3>Recent posts</h3><p>The posts below are displayed in an \"Archive\" layout building block which is an extremely powerful way to display documents on a page. It can be auto-populated by collection or by category, or posts can be individually selected. Pagination controls will automatically appear if the number of results exceeds the number of items per page.</p>"
+				},
+				{
+					"$type": "CallToAction",
+					"richText": "<h3>This is a call to action</h3><p>This is a custom layout building block <a href=\"/admin\">configured in the admin dashboard</a>.</p>",
+					"links": [
+						{
+							"$type": "Link",
+							"url": "/posts",
+							"label": "All posts",
+							"appearance": "default"
+						}
+					]
+				}
+			],
+			"slug": "home"
+		},
+		{
+			"$type": "Page",
+			"id": "2",
+			"title": "Contact",
+			"hero": {
+				"$type": "Hero",
+				"type": "none",
+				"richText": "",
+				"links": []
+			},
+			"layout": [
+				{
+					"$type": "Form",
+					"introContent": "<h3>Example contact form:</h3>",
+					"enableIntro": "true"
+				}
+			],
+			"slug": "contact"
+		}
+	]
+}

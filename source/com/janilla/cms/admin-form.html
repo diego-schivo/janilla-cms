@@ -1,0 +1,13 @@
+<!--${content}-->
+<template id="dashboard">
+  <dashboard-view></dashboard-view>
+</template>
+<template id="collection">
+  <collection-list data-path="${path}"></collection-list>
+</template>
+<template id="object">
+  <form autocomplete="off">
+    <object-field data-path="${path}"></object-field>
+    <button>save</button>
+  </form>
+</template>

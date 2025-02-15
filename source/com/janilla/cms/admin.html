@@ -1,13 +1,14 @@
 <!doctype html>
-<html lang="en" class="index">
+<html lang="en" class="admin">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Janilla CMS</title>
+    <title>Admin</title>
     <link rel="stylesheet" href="/style.css" />
     <script type="module" src="/script.js"></script>
   </head>
   <body>
-    <root-element></root-element>
+    <script id="schema" type="application/json">${schema}</script>
+    <admin-form data-path="${path}"></admin-form>
   </body>
 </html>

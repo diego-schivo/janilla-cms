@@ -1,0 +1,26 @@
+call-to-action {
+  > article {
+    border: 1px solid rgba(38, 38, 38, 0.8);
+    border-radius: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+
+    h3 {
+      font-weight: 600;
+    }
+
+    > a {
+      background: rgb(248, 250, 252);
+      border: 1px solid rgba(38, 38, 38, 0.8);
+      border-radius: 0.25rem;
+      color: rgb(15, 23, 42);
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.25rem;
+      padding: 0.5rem;
+      text-align: center;
+    }
+  }
+}

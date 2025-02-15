@@ -1,0 +1,34 @@
+<h3>${label}</h3>
+<ol>
+  <!--${items}-->
+  <li>
+    <button type="button">add</button>
+  </li>
+</ol>
+<template id="item">
+  <li>
+    <article>
+      <header>
+        <h4>${type}</h4>
+        <select>
+          <option>&hellip;</option>
+          <option value="remove">Remove</option>
+        </select>
+        <input type="checkbox" />
+      </header>
+      <!--${field}-->
+    </article>
+  </li>
+</template>
+<template id="object">
+  <object-field data-path="${path}" data-key="${key}"></object-field>
+</template>
+<dialog>
+  <!--${types}-->
+  <template id="type">
+    <label>
+      <input type="radio" name="type" value="${name}" checked="${checked}" />
+      ${name}
+    </label>
+  </template>
+</dialog>

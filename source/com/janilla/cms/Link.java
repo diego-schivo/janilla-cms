@@ -21,25 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { UpdatableHTMLElement } from "./updatable-html-element.js";
+package com.janilla.cms;
 
-export default class RootLayout extends UpdatableHTMLElement {
-
-	static get templateName() {
-		return "root-layout";
-	}
-
-	constructor() {
-		super();
-	}
-
-	connectedCallback() {
-		super.connectedCallback();
-		const o = JSON.parse(document.querySelector("#state").text);
-		Object.assign(this.state, o);
-	}
-
-	disconnectedCallback() {
-		super.disconnectedCallback();
-	}
+public record Link(String url, String label, String appearance) {
 }
