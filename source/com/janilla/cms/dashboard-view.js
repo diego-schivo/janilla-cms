@@ -34,13 +34,13 @@ export default class DashboardView extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const d = this.closest("admin-form").state.data;
+		const s = this.closest("admin-root").state.schema;
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			items: Object.entries(d).filter(([k, _]) => !k.startsWith("$")).map(([k, v]) => ({
+			items: Object.entries(s["Data"]).map(([k, v]) => ({
 				$template: "group",
 				name: k,
-				items: Object.keys(v).filter(x => !x.startsWith("$")).map(x => ({
+				items: Object.keys(s[v.type]).map(x => ({
 					$template: "card",
 					href: `/admin/${k}/${x}`,
 					name: x

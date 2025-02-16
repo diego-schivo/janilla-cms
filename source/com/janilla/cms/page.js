@@ -23,10 +23,10 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class ContentComponent extends UpdatableHTMLElement {
+export default class Page extends UpdatableHTMLElement {
 
 	static get templateName() {
-		return "content-component";
+		return "page";
 	}
 
 	constructor() {
@@ -34,13 +34,23 @@ export default class ContentComponent extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const d = this.closest("page-element").data(this.dataset.path);
+		const n = location.pathname.split("/")[1] || "home";
+		const s = this.state;
+		s.page = (await (await fetch(`/api/pages?slug=${encodeURIComponent(n)}`)).json())[0];
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			sections: d.columns.map(x => ({
-				$template: "section",
-				...x
+			hero: s.page.hero.type === "none" ? null : {
+				$template: "hero",
+				path: "hero"
+			},
+			layout: s.page.layout.map((x, i) => ({
+				$template: x.$type.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-"),
+				path: `layout.${i}`
 			}))
 		}));
+	}
+
+	data(path) {
+		return path.split(".").reduce((x, n) => x[Array.isArray(x) ? parseInt(n) : n], this.state.page);
 	}
 }

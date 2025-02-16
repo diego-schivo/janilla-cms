@@ -38,7 +38,7 @@ export default class ObjectField extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const af = this.closest("admin-form");
+		const af = this.closest("admin-root");
 		const p = this.dataset.path;
 		const f = af.field(p);
 		this.appendChild(this.interpolateDom({

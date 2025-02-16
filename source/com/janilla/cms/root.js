@@ -23,10 +23,10 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class PageElement extends UpdatableHTMLElement {
+export default class Root extends UpdatableHTMLElement {
 
 	static get templateName() {
-		return "page-element";
+		return "root";
 	}
 
 	constructor() {
@@ -34,23 +34,18 @@ export default class PageElement extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const n = location.pathname.split("/")[1] || "home";
-		const s = this.state;
-		s.page = (await (await fetch(`/api/pages?slug=${encodeURIComponent(n)}`)).json())[0];
+		//const d = JSON.parse(localStorage.getItem("data"));
+		//const h = d.globals.header;
+		const h = await (await fetch("/api/header")).json();
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			hero: s.page.hero.type === "none" ? null : {
-				$template: "hero",
-				path: "hero"
-			},
-			layout: s.page.layout.map((x, i) => ({
-				$template: x.$type.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-"),
-				path: `layout.${i}`
-			}))
+			header: {
+				$template: "header",
+				navItems: h.navItems?.map(x => ({
+					$template: "header-link",
+					...x
+				}))
+			}
 		}));
-	}
-
-	data(path) {
-		return path.split(".").reduce((x, n) => x[Array.isArray(x) ? parseInt(n) : n], this.state.page);
 	}
 }

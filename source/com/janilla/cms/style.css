@@ -3,16 +3,16 @@
 
 @import "admin.css";
 
-@import "admin-form.css";
+@import "admin-root.css";
 @import "archive.css";
 @import "call-to-action.css";
-@import "content-component.css";
+@import "content.css";
 @import "dashboard-view.css";
-@import "form-component.css";
-@import "hero-component.css";
+@import "form.css";
+@import "hero.css";
 @import "list-field.css";
-@import "media-component.css";
+@import "media.css";
 @import "object-field.css";
-@import "page-element.css";
-@import "root-element.css";
+@import "page.css";
+@import "root.css";
 @import "tabs-field.css";

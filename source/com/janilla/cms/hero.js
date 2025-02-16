@@ -23,10 +23,10 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class HeroComponent extends UpdatableHTMLElement {
+export default class Hero extends UpdatableHTMLElement {
 
 	static get templateName() {
-		return "hero-component";
+		return "hero";
 	}
 
 	constructor() {

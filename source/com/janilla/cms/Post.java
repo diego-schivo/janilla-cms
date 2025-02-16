@@ -21,31 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { UpdatableHTMLElement } from "./updatable-html-element.js";
+package com.janilla.cms;
 
-export default class LayoutElement extends UpdatableHTMLElement {
+import com.janilla.persistence.Store;
 
-	static get templateName() {
-		return "root-element";
-	}
+@Store
+public record Post(Long id, Meta meta) {
 
-	constructor() {
-		super();
-	}
-
-	async updateDisplay() {
-		//const d = JSON.parse(localStorage.getItem("data"));
-		//const h = d.globals.header;
-		const h = await (await fetch("/api/header")).json();
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			header: {
-				$template: "header",
-				navItems: h.navItems?.map(x => ({
-					$template: "header-link",
-					...x
-				}))
-			}
-		}));
+	public record Meta(String title, String image, String description) {
 	}
 }

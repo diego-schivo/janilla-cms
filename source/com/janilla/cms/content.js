@@ -23,10 +23,10 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class MediaComponent extends UpdatableHTMLElement {
+export default class Content extends UpdatableHTMLElement {
 
 	static get templateName() {
-		return "media-component";
+		return "content";
 	}
 
 	constructor() {
@@ -37,7 +37,10 @@ export default class MediaComponent extends UpdatableHTMLElement {
 		const d = this.closest("page-element").data(this.dataset.path);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			...d
+			sections: d.columns.map(x => ({
+				$template: "section",
+				...x
+			}))
 		}));
 	}
 }

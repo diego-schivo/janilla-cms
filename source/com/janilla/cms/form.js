@@ -23,10 +23,10 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class FormComponent extends UpdatableHTMLElement {
+export default class Form extends UpdatableHTMLElement {
 
 	static get templateName() {
-		return "form-component";
+		return "form";
 	}
 
 	constructor() {

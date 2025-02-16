@@ -80,7 +80,7 @@ export default class ListField extends UpdatableHTMLElement {
 		const p = this.dataset.path;
 		const s = this.state;
 		s.field ??= (() => {
-			const af = this.closest("admin-form");
+			const af = this.closest("admin-root");
 			return af.field(p);
 		})();
 		s.keys ??= Array.from({ length: s.field.data.length }, (_, i) => i);

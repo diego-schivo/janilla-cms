@@ -23,9 +23,15 @@
  */
 package com.janilla.cms;
 
+import java.lang.reflect.AnnotatedParameterizedType;
+import java.lang.reflect.ParameterizedType;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -38,9 +44,11 @@ import com.janilla.net.Server;
 import com.janilla.persistence.ApplicationPersistenceBuilder;
 import com.janilla.persistence.Persistence;
 import com.janilla.reflect.Factory;
+import com.janilla.reflect.Reflection;
 import com.janilla.util.Util;
 import com.janilla.web.ApplicationHandlerBuilder;
 import com.janilla.web.Handle;
+import com.janilla.web.JsonRenderer;
 import com.janilla.web.Render;
 
 public class JanillaCms {
@@ -105,10 +113,47 @@ public class JanillaCms {
 
 	@Handle(method = "GET", path = "(/[\\w\\d/-]*)")
 	public Index index() {
-		return new Index(); // persistence.crud(Header.class).read(1));
+		return new Index();
+	}
+
+	@Handle(method = "GET", path = "/admin(/.*)?")
+	public Admin admin(String path) {
+		var m1 = new LinkedHashMap<String, Map<String, Map<String, Object>>>();
+		var q = new ArrayDeque<Class<?>>();
+		q.add(Data.class);
+		do {
+			var c = q.remove();
+			var m2 = new LinkedHashMap<String, Map<String, Object>>();
+			Reflection.properties(c).forEach(x -> {
+				var m3 = new LinkedHashMap<String, Object>();
+				m3.put("type", x.type().getSimpleName());
+				List<Class<?>> cc;
+				if (x.type() == List.class) {
+					var apt = x.annotatedType() instanceof AnnotatedParameterizedType y ? y : null;
+					var ta = apt != null ? apt.getAnnotatedActualTypeArguments()[0].getAnnotation(Types.class) : null;
+					cc = ta != null ? Arrays.asList(ta.value())
+							: List.of((Class<?>) ((ParameterizedType) x.genericType()).getActualTypeArguments()[0]);
+					m3.put("elementTypes", cc.stream().map(Class::getSimpleName).toList());
+				} else if (x.type().getPackageName().equals("java.lang"))
+					cc = List.of();
+				else if (!m1.containsKey(x.type().getSimpleName()))
+					cc = List.of(x.type());
+				else
+					cc = List.of();
+				m2.put(x.name(), m3);
+				q.addAll(cc);
+			});
+			m1.put(c.getSimpleName(), m2);
+		} while (!q.isEmpty());
+		return new Admin(path != null ? path.substring(1).replace("/", ".") : null, m1);
+	}
+
+	@Render(template = "admin.html")
+	public record Admin(String path,
+			@Render(renderer = JsonRenderer.class) Map<String, Map<String, Map<String, Object>>> schema) {
 	}
 
 	@Render(template = "index.html")
-	public record Index() { // Header header) {
+	public record Index() {
 	}
 }

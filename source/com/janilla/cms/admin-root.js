@@ -23,10 +23,10 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class AdminForm extends UpdatableHTMLElement {
+export default class AdminRoot extends UpdatableHTMLElement {
 
 	static get templateName() {
-		return "admin-form";
+		return "admin-root";
 	}
 
 	constructor() {
@@ -48,14 +48,6 @@ export default class AdminForm extends UpdatableHTMLElement {
 		const p = this.dataset.path;
 		const nn = p ? p.split(".") : [];
 		const s = this.state;
-		/*
-		localStorage.setItem("data", JSON.stringify([...new FormData(event.target).entries()].reduce((data, [k, v]) => {
-			const i = k.lastIndexOf(".");
-			let f = this.field(k.substring(0, i), data);
-			f.data[k.substring(i + 1)] = v;
-			return data;
-		}, s.data)));
-		*/
 		let r;
 		switch (nn[0]) {
 			case "collections":
