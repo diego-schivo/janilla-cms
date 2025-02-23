@@ -31,7 +31,8 @@ import java.util.function.UnaryOperator;
 import com.janilla.json.Converter;
 import com.janilla.json.Json;
 
-public record SeedData(Header header, List<Page> pages) {
+public record SeedData(List<Page> pages, List<Post> posts, List<Media> media, List<Category> categories,
+		List<User> users, Header header) {
 
 	public static SeedData INSTANCE;
 
@@ -50,9 +51,8 @@ public record SeedData(Header header, List<Page> pages) {
 		@Override
 		public Converter.MapType apply(Converter.MapType mt) {
 			try {
-				return mt.map().containsKey("$type")
-						? new Converter.MapType(mt.map(),
-								Class.forName(SeedData.class.getPackageName() + "." + mt.map().get("$type")))
+				return mt.map().containsKey("$type") ? new Converter.MapType(mt.map(), Class.forName(
+						SeedData.class.getPackageName() + "." + ((String) mt.map().get("$type")).replace(".", "$")))
 						: null;
 			} catch (ClassNotFoundException e) {
 				throw new RuntimeException(e);

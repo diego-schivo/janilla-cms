@@ -1,6 +1,14 @@
+<header>
+  <button type="button" name="open-menu">
+    <lucide-icon data-name="menu"></lucide-icon>
+  </button>
+</header>
 <!--${content}-->
 <template id="dashboard">
   <dashboard-view></dashboard-view>
+</template>
+<template id="login">
+  <login-element></login-element>
 </template>
 <template id="collection">
   <collection-list data-path="${path}"></collection-list>
@@ -11,3 +19,8 @@
     <button>save</button>
   </form>
 </template>
+<dialog>
+  <button type="button" name="logout">
+    <lucide-icon data-name="log-out"></lucide-icon>
+  </button>
+</dialog>

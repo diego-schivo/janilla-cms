@@ -3,7 +3,8 @@ dashboard-view {
     font-size: 17px;
   }
 
-  ul {
+  ul,
+  li {
     display: flex;
     flex-direction: column;
     gap: 1rem;

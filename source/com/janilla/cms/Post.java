@@ -23,10 +23,20 @@
  */
 package com.janilla.cms;
 
+import java.time.Instant;
+import java.util.List;
+
+import com.janilla.persistence.Index;
 import com.janilla.persistence.Store;
 
 @Store
-public record Post(Long id, Meta meta) {
+@Index(sort = "-createdAt")
+public record Post(Long id, String title, String heroImage, String content, List<@Types(Post.class) Long> relatedPosts,
+		List<@Types(Category.class) Long> categories, Meta meta, @Index String slug, Instant createdAt) {
+
+	public Post withCreatedAt(Instant createdAt) {
+		return new Post(id, title, heroImage, content, relatedPosts, categories, meta, slug, createdAt);
+	}
 
 	public record Meta(String title, String image, String description) {
 	}

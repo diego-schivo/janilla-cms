@@ -49,7 +49,7 @@ export default class ListField extends UpdatableHTMLElement {
 		this.removeEventListener("click", this.handleClick);
 	}
 
-	handleChange = async event => {
+	handleChange = event => {
 		if (event.target.matches("select")) {
 			event.stopPropagation();
 			const li = event.target.closest("li");
@@ -69,7 +69,7 @@ export default class ListField extends UpdatableHTMLElement {
 		}
 	}
 
-	handleClick = async event => {
+	handleClick = event => {
 		if (!event.target.matches('[type="button"]'))
 			return;
 		event.stopPropagation();
@@ -80,7 +80,7 @@ export default class ListField extends UpdatableHTMLElement {
 		const p = this.dataset.path;
 		const s = this.state;
 		s.field ??= (() => {
-			const af = this.closest("admin-root");
+			const af = this.closest("admin-panel");
 			return af.field(p);
 		})();
 		s.keys ??= Array.from({ length: s.field.data.length }, (_, i) => i);
@@ -99,8 +99,7 @@ export default class ListField extends UpdatableHTMLElement {
 			})),
 			types: s.field.elementTypes.map(x => ({
 				$template: "type",
-				name: x,
-				checked: false
+				name: x
 			}))
 		}));
 	}

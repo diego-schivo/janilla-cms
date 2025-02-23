@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 
 import javax.net.ssl.SSLContext;
 
@@ -116,36 +117,49 @@ public class JanillaCms {
 		return new Index();
 	}
 
-	@Handle(method = "GET", path = "/admin(/.*)?")
-	public Admin admin(String path) {
+	@Handle(method = "GET", path = "/api/schema")
+	public Map<String, Map<String, Map<String, Object>>> schema() {
 		var m1 = new LinkedHashMap<String, Map<String, Map<String, Object>>>();
 		var q = new ArrayDeque<Class<?>>();
 		q.add(Data.class);
+		Function<Class<?>, String> f = x -> x.getName().substring(x.getPackageName().length() + 1).replace('$', '.');
 		do {
 			var c = q.remove();
 			var m2 = new LinkedHashMap<String, Map<String, Object>>();
 			Reflection.properties(c).forEach(x -> {
 				var m3 = new LinkedHashMap<String, Object>();
-				m3.put("type", x.type().getSimpleName());
+				m3.put("type", f.apply(x.type()));
 				List<Class<?>> cc;
 				if (x.type() == List.class) {
+					var c2 = (Class<?>) ((ParameterizedType) x.genericType()).getActualTypeArguments()[0];
 					var apt = x.annotatedType() instanceof AnnotatedParameterizedType y ? y : null;
 					var ta = apt != null ? apt.getAnnotatedActualTypeArguments()[0].getAnnotation(Types.class) : null;
-					cc = ta != null ? Arrays.asList(ta.value())
-							: List.of((Class<?>) ((ParameterizedType) x.genericType()).getActualTypeArguments()[0]);
-					m3.put("elementTypes", cc.stream().map(Class::getSimpleName).toList());
-				} else if (x.type().getPackageName().equals("java.lang"))
+					if (c2 == Long.class) {
+						cc = List.of();
+						m3.put("elementTypes", List.of(f.apply(c2)));
+						if (ta != null)
+							m3.put("referenceType", f.apply(ta.value()[0]));
+					} else {
+						cc = ta != null ? Arrays.asList(ta.value()) : List.of(c2);
+						m3.put("elementTypes", cc.stream().map(f).toList());
+					}
+				} else if (x.type().getPackageName().startsWith("java.")) {
+					if (x.type() == Long.class) {
+						var ta = x.annotatedType().getAnnotation(Types.class);
+						if (ta != null)
+							m3.put("referenceType", f.apply(ta.value()[0]));
+					}
 					cc = List.of();
-				else if (!m1.containsKey(x.type().getSimpleName()))
+				} else if (!m1.containsKey(f.apply(x.type())))
 					cc = List.of(x.type());
 				else
 					cc = List.of();
 				m2.put(x.name(), m3);
 				q.addAll(cc);
 			});
-			m1.put(c.getSimpleName(), m2);
+			m1.put(f.apply(c), m2);
 		} while (!q.isEmpty());
-		return new Admin(path != null ? path.substring(1).replace("/", ".") : null, m1);
+		return m1;
 	}
 
 	@Render(template = "admin.html")

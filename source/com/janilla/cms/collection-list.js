@@ -46,16 +46,9 @@ export default class CollectionList extends UpdatableHTMLElement {
 	handleSubmit = async event => {
 		event.preventDefault();
 		event.stopPropagation();
-		const af = this.closest("admin-root");
+		const af = this.closest("admin-panel");
 		const p = af.dataset.path;
 		const nn = p.split(".");
-		/*
-		const af = this.closest("admin-root");
-		const f = af.field(p);
-		f.data.push({ $type: f.elementTypes[0] });
-		localStorage.setItem("data", JSON.stringify(af.state.data));
-		location.href = `/admin/${p.replaceAll(".", "/")}/${f.data.length - 1}`;
-		*/
 		const e = await (await fetch(`/api/${nn[1]}`, {
 			method: "POST",
 			headers: { "content-type": "application/json" },
@@ -65,10 +58,9 @@ export default class CollectionList extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const af = this.closest("admin-root");
+		const af = this.closest("admin-panel");
 		const p = af.dataset.path;
 		const nn = p.split(".");
-		//const f = af.field();
 		const d = await (await fetch(`/api/${nn[1]}`)).json();
 		this.appendChild(this.interpolateDom({
 			$template: "",

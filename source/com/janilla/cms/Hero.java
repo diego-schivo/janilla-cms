@@ -25,5 +25,5 @@ package com.janilla.cms;
 
 import java.util.List;
 
-public record Hero(String type, String richText, List<Link> links) {
+public record Hero(String type, String richText, List<Link> links, @Types(Media.class) Long media) {
 }

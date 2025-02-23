@@ -34,7 +34,7 @@ export default class DashboardView extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const s = this.closest("admin-root").state.schema;
+		const s = this.closest("admin-panel").state.schema;
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			items: Object.entries(s["Data"]).map(([k, v]) => ({

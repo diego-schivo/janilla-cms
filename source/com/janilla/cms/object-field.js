@@ -38,7 +38,7 @@ export default class ObjectField extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const af = this.closest("admin-root");
+		const af = this.closest("admin-panel");
 		const p = this.dataset.path;
 		const f = af.field(p);
 		this.appendChild(this.interpolateDom({
@@ -51,40 +51,70 @@ export default class ObjectField extends UpdatableHTMLElement {
 						switch (v.type) {
 							case "Boolean":
 								return "checkbox";
-							case "List":
-								return "list";
-							case "Long":
+							case "File":
+								return "file";
+							case "Instant":
 							case "String":
 								return "text";
+							case "List":
+								return v.referenceType ? "reference-list" : "list";
+							case "Long":
+								return v.referenceType ? "reference" : "text";
 							default:
 								return "object";
 						}
 					})(),
-					label: k,
+					name: k,
+					label: k.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join(" "),
 					path: p ? `${p}.${k}` : k,
-					key: this.dataset.key
+					key: this.dataset.key,
+					//documentSlug: v.referenceType ? `${v.referenceType.toLowerCase()}s` : null
+					...v
 				}));
-				const nn = ["hero", "layout"];
-				const kk = Object.keys(f.properties);
-				const ii = nn.map(x => kk.indexOf(x)).filter(x => x !== -1);
-				const jj = ff.filter((_, i) => !ii.includes(i)).map(x => ({
+				let nn;
+				switch (f.type) {
+					case "Page":
+						nn = {
+							hero: ["hero"],
+							layout: ["layout"]
+						};
+						break;
+					case "Post":
+						nn = {
+							content: ["heroImage", "content"],
+							meta: ["relatedPosts", "categories"],
+							seo: ["meta"]
+						};
+						break;
+				}
+				let ii;
+				if (nn) {
+					const kk = Object.keys(f.properties);
+					ii = Object.fromEntries(Object.values(nn).flatMap(x => x.map(y => [y, kk.indexOf(y)])).filter((_, i) => i !== -1));
+				}
+				const jj = (nn ? ff.filter(x => !Object.hasOwn(ii, x.name)) : ff).map(x => ({
 					$template: "item",
 					field: x
 				}));
-				if (ii.length)
-					jj.splice(ii[0], 0, {
+				if (nn)
+					jj.splice(Object.values(ii)[0], 0, {
 						$template: "item",
 						field: {
 							$template: "tabs",
-							buttons: nn.map((x, i) => ({
+							buttons: Object.keys(nn).map((x, i) => ({
 								$template: "tabs-button",
 								index: i,
 								label: x
 							})),
-							panels: ff.filter((_, i) => ii.includes(i)).map((x, i) => ({
+							panels: Object.values(nn).map((x, i) => ({
 								$template: "tabs-panel",
 								index: i,
-								field: x
+								items: (() => {
+									return x.map(y => ({
+										$template: "item",
+										field: ff.find(z => z.name === y)
+									}));
+								})()
 							}))
 						}
 					});

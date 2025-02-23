@@ -1,0 +1,31 @@
+reference-list-field {
+  li {
+    align-items: center;
+    display: flex;
+    font-size: 12px;
+    justify-content: space-between;
+    line-height: 22px;
+  }
+
+  dialog[open] {
+    &,
+    > div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    & {
+      gap: 1rem;
+    }
+
+	> header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    > div {
+      gap: 0.5rem;
+    }
+  }
+}

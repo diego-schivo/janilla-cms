@@ -1,0 +1,15 @@
+post-element {
+  main {
+    > :first-child {
+      align-items: flex-end;
+      background: no-repeat top center / 1280px 80vh;
+      display: flex;
+      margin-top: -10.4rem;
+      min-height: 80vh;
+      position: relative;
+      > div {
+        padding: 0 1rem;
+      }
+    }
+  }
+}

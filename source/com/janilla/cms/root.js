@@ -34,17 +34,25 @@ export default class Root extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		//const d = JSON.parse(localStorage.getItem("data"));
-		//const h = d.globals.header;
-		const h = await (await fetch("/api/header")).json();
-		this.appendChild(this.interpolateDom({
+		const m = location.pathname.match(/^\/admin(\/.*)?$/);
+		this.appendChild(this.interpolateDom(m ? {
+			$template: "admin",
+			path: m[1]?.substring(1)?.replaceAll("/", ".")
+		} : {
 			$template: "",
 			header: {
 				$template: "header",
-				navItems: h.navItems?.map(x => ({
+				navItems: (await (await fetch("/api/header")).json()).navItems?.map(x => ({
 					$template: "header-link",
 					...x
 				}))
+			},
+			//content: { $template: location.pathname.startsWith("/posts/") ? "post" : "page" }
+			content: {
+				$template: (() => {
+					const m2 = location.pathname.match(/^\/posts(\/.*)?$/);
+					return m2 ? (m2[1] ? "post" : "posts") : "page";
+				})()
 			}
 		}));
 	}

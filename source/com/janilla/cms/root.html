@@ -2,7 +2,7 @@
 <template id="header">
   <header class="header">
     <a href="/">
-      <img src="/images/payload-logo-light.svg" />
+      <img src="/images/payload-logo-light.svg" loading="lazy" />
     </a>
     <nav>
       <!--${navItems}-->
@@ -16,10 +16,19 @@
 <template id="header-link">
   <a href="${url}">${label}</a>
 </template>
-<page-element></page-element>
+<!--${content}-->
+<template id="page">
+  <page-element></page-element>
+</template>
+<template id="posts">
+  <post-list></post-list>
+</template>
+<template id="post">
+  <post-element></post-element>
+</template>
 <footer class="footer">
   <a href="/">
-    <img src="/images/payload-logo-light.svg" />
+    <img src="/images/payload-logo-light.svg" loading="lazy" />
   </a>
   <nav>
     <a href="/">Admin</a>
@@ -35,3 +44,6 @@
     <lucide-icon data-name="chevron-down"></lucide-icon>
   </div>
 </footer>
+<template id="admin">
+  <admin-panel data-path="${path}"></admin-panel>
+</template>

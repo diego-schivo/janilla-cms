@@ -35,9 +35,14 @@ export default class Archive extends UpdatableHTMLElement {
 
 	async updateDisplay() {
 		const d = this.closest("page-element").data(this.dataset.path);
+		const pp = await (await fetch("/api/posts")).json();
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			...d
+			...d,
+			articles: pp.map(x => ({
+				$template: "article",
+				...x
+			}))
 		}));
 	}
 }

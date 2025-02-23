@@ -38,7 +38,7 @@ export default class CheckboxField extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const af = this.closest("admin-root");
+		const af = this.closest("admin-panel");
 		const p = this.dataset.path;
 		const f = af.field(p);
 		this.appendChild(this.interpolateDom({

@@ -7,6 +7,12 @@ hero-component {
 
   article {
     flex-direction: column;
+    background: no-repeat top center / 1280px 80vh;
+    justify-content: center;
+    margin-top: -6.5rem;
+    min-height: 80vh;
+    padding: 1rem;
+    position: relative;
   }
 
   h1 {

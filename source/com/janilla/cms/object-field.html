@@ -6,6 +6,12 @@
     <!--${field}-->
   </li>
 </template>
+<template id="checkbox">
+  <checkbox-field data-path="${path}" data-key="${key}"></text-field>
+</template>
+<template id="file">
+  <file-field data-path="${path}" data-key="${key}"></file-field>
+</template>
 <template id="text">
   <text-field data-path="${path}" data-key="${key}"></text-field>
 </template>
@@ -13,12 +19,16 @@
   <h3>${label}</h3>
   <list-field data-path="${path}" data-key="${key}"></list-field>
 </template>
+<template id="reference">
+  <reference-field data-path="${path}" data-key="${key}"></reference-field>
+</template>
+<template id="reference-list">
+  <label>${label}</label>
+  <reference-list-field data-path="${path}" data-key="${key}" data-type="${referenceType}"></reference-list-field>
+</template>
 <template id="object">
   <h3>${label}</h3>
   <object-field data-path="${path}" data-key="${key}"></object-field>
-</template>
-<template id="checkbox">
-  <checkbox-field data-path="${path}" data-key="${key}"></text-field>
 </template>
 <template id="tabs">
   <tabs-field data-key="${key}">
@@ -33,7 +43,9 @@
 </template>
 <template id="tabs-panel">
   <div id="panel-${index}" role="tabpanel" hidden>
-    <!--${field}-->
+    <ul>
+      <!--${items}-->
+    </ul>
   </div>
 </template>
 <input type="hidden" name="${path}.$type" value="${type}" />

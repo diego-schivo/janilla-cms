@@ -1,22 +1,4 @@
 {
-	"header": {
-		"$type": "Header",
-		"id": 1,
-		"navItems": [
-			{
-				"$type": "Link",
-				"url": "/posts",
-				"label": "Posts",
-				"appearance": ""
-			},
-			{
-				"$type": "Link",
-				"url": "/contact",
-				"label": "Contact",
-				"appearance": ""
-			}
-		]
-	},
 	"pages": [
 		{
 			"$type": "Page",
@@ -39,7 +21,8 @@
 						"label": "Contact",
 						"appearance": "outline"
 					}
-				]
+				],
+				"media": 4
 			},
 			"layout": [
 				{
@@ -56,9 +39,8 @@
 					]
 				},
 				{
-					"$type": "Media",
-					"url": "/images/image-post2.webp",
-					"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+					"$type": "MediaBlock",
+					"media": 2
 				},
 				{
 					"$type": "Archive",
@@ -81,13 +63,14 @@
 		},
 		{
 			"$type": "Page",
-			"id": "2",
+			"id": 2,
 			"title": "Contact",
 			"hero": {
 				"$type": "Hero",
 				"type": "none",
 				"richText": "",
-				"links": []
+				"links": [],
+				"media": null
 			},
 			"layout": [
 				{
@@ -98,5 +81,157 @@
 			],
 			"slug": "contact"
 		}
-	]
+	],
+	"posts": [
+		{
+			"$type": "Post",
+			"id": 1,
+			"title": "Digital Horizons: A Glimpse into Tomorrow",
+			"meta": {
+				"$type": "Post.Meta",
+				"title": "Digital Horizons: A Glimpse into Tomorrow",
+				"image": "/images/image-post1.webp",
+				"description": "Dive into the marvels of modern innovation, where the only constant is change. A journey where pixels and data converge to craft the future."
+			},
+			"createdAt": "2025-02-16T09:07:44.965918Z"
+		},
+		{
+			"$type": "Post",
+			"id": 2,
+			"title": "Global Gaze: Beyond the Headlines",
+			"meta": {
+				"$type": "Post.Meta",
+				"title": "Global Gaze: Beyond the Headlines",
+				"image": "/images/image-post2.webp",
+				"description": "Explore the untold and overlooked. A magnified view into the corners of the world, where every story deserves its spotlight."
+			},
+			"createdAt": "2025-02-16T09:08:44.965918Z"
+		},
+		{
+			"$type": "Post",
+			"id": 3,
+			"title": "Dollar and Sense: The Financial Forecast",
+			"heroImage": "/images/image-post3.webp",
+			"content": "<h2>Dive into the marvels of modern innovation, where the only constant is change. A journey where pixels and data converge to craft the future.</h2><p><strong>Disclaimer:</strong> This content is fabricated and for demonstration purposes only. To edit this post, <a href=\"/admin\" rel=\"noopener noreferrer\" target=\"_blank\">navigate to the admin dashboard</a>.</p>",
+			"relatedPosts": [
+				1,
+				2
+			],
+			"meta": {
+				"$type": "Post.Meta",
+				"title": "Dollar and Sense: The Financial Forecast",
+				"image": "/images/image-post3.webp",
+				"description": "Money isn't just currency; it's a language. Dive deep into its nuances, where strategy meets intuition in the vast sea of finance."
+			},
+			"slug": "dollar-and-sense-the-financial-forecast",
+			"createdAt": "2025-02-16T09:09:44.965918Z"
+		}
+	],
+	"media": [
+		{
+			"$type": "Media",
+			"id": 1,
+			"file": {
+				"$type": "File",
+				"name": "image-post1.webp"
+			},
+			"alt": "",
+			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+		},
+		{
+			"$type": "Media",
+			"id": 2,
+			"file": {
+				"$type": "File",
+				"name": "image-post2.webp"
+			},
+			"alt": "",
+			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+		},
+		{
+			"$type": "Media",
+			"id": 3,
+			"file": {
+				"$type": "File",
+				"name": "image-post3.webp"
+			},
+			"alt": "",
+			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
+		},
+		{
+			"$type": "Media",
+			"id": 4,
+			"file": {
+				"$type": "File",
+				"name": "image-hero1.webp"
+			},
+			"alt": "Straight metallic shapes with a blue gradient",
+			"caption": ""
+		}
+	],
+	"categories": [
+		{
+			"$type": "Category",
+			"id": 1,
+			"title": "Technology",
+			"slug": "technology"
+		},
+		{
+			"$type": "Category",
+			"id": 2,
+			"title": "News",
+			"slug": "news"
+		},
+		{
+			"$type": "Category",
+			"id": 3,
+			"title": "Finance",
+			"slug": "finance"
+		},
+		{
+			"$type": "Category",
+			"id": 4,
+			"title": "Design",
+			"slug": "design"
+		},
+		{
+			"$type": "Category",
+			"id": 5,
+			"title": "Software",
+			"slug": "software"
+		},
+		{
+			"$type": "Category",
+			"id": 6,
+			"title": "Engineering",
+			"slug": "engineering"
+		}
+	],
+	"users": [
+		{
+			"$type": "User",
+			"id": 1,
+			"name": "Demo Author",
+			"email": "demo-author@example.com",
+			"password": "password"
+		}
+	],
+	"header": {
+		"$type": "Header",
+		"id": 1,
+		"navItems": [
+			{
+				"$type": "Link",
+				"url": "/posts",
+				"label": "Posts",
+				"appearance": ""
+			},
+			{
+				"$type": "Link",
+				"url": "/contact",
+				"label": "Contact",
+				"appearance": ""
+			}
+		]
+	}
 }

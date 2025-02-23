@@ -23,10 +23,10 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class AdminRoot extends UpdatableHTMLElement {
+export default class AdminPanel extends UpdatableHTMLElement {
 
 	static get templateName() {
-		return "admin-root";
+		return "admin-panel";
 	}
 
 	constructor() {
@@ -35,12 +35,31 @@ export default class AdminRoot extends UpdatableHTMLElement {
 
 	connectedCallback() {
 		super.connectedCallback();
+		this.addEventListener("click", this.handleClick);
 		this.addEventListener("submit", this.handleSubmit);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
+		this.removeEventListener("click", this.handleClick);
 		this.removeEventListener("submit", this.handleSubmit);
+	}
+
+	handleClick = async event => {
+		const b = event.target.closest("button");
+		if (!b)
+			return;
+		event.stopPropagation();
+		switch (b.name) {
+			case "open-menu":
+				this.querySelector("dialog").showModal();
+				break;
+			case "logout":
+				await fetch("/api/users/logout", { method: "POST" });
+				//b.closest("dialog").close();
+				location.href = "/admin";
+				break;
+		}
 	}
 
 	handleSubmit = async event => {
@@ -57,47 +76,68 @@ export default class AdminRoot extends UpdatableHTMLElement {
 				r = `/api/${nn[1]}`;
 				break;
 		}
-		await (await fetch(r, {
+		const ee = [...new FormData(event.target).entries()];
+		for (const [k, v] of ee.filter(([_, x]) => x instanceof File)) {
+			const fd = new FormData();
+			fd.append(k, v);
+			const xhr = new XMLHttpRequest();
+			xhr.open("POST", "/api/upload", true);
+			xhr.send(fd);
+		}
+		s.data = await (await fetch(r, {
 			method: "PUT",
 			headers: { "content-type": "application/json" },
-			body: JSON.stringify([...new FormData(event.target).entries()].reduce((data, [k, v]) => {
+			body: JSON.stringify(ee.reduce((data, [k, v]) => {
 				const i = k.lastIndexOf(".");
 				let f = this.field(k.substring(0, i), data);
-				f.data[k.substring(i + 1)] = v;
+				f.data[k.substring(i + 1)] = v instanceof File ? { name: v.name } : v;
 				return data;
 			}, s.data))
 		})).json();
 	}
 
 	async updateDisplay() {
-		const s = this.state;
-		s.schema = JSON.parse(document.getElementById("schema").text);
 		const p = this.dataset.path;
 		const nn = p ? p.split(".") : [];
-		if (nn.length === 3 && nn[0] === "collections") {
-			s.t0 = s.schema["Collections"][nn[1]].elementTypes[0];
-			s.data = await (await fetch(`/api/${nn[1]}/${nn[2]}`)).json();
-		} else if (nn.length === 2 && nn[0] === "globals") {
-			s.t0 = s.schema["Globals"][nn[1]].type;
-			s.data = await (await fetch(`/api/${nn[1]}`)).json();
-		} else if (nn.length === 0) {
-			s.t0 = Object.keys(s.schema)[0];
-			s.data = JSON.parse(localStorage.getItem("data")) ?? {
-				collections: {
-					pages: []
-				},
-				globals: {
-					header: { $type: "Header" }
-				}
-			};
+		const s = this.state;
+		s.me = await (await fetch("/api/users/me")).json();
+		if (!s.me) {
+			if (p !== "login") {
+				location.href = "/admin/login";
+				return;
+			}
+		} else {
+			if (p === "login") {
+				location.href = "/admin";
+				return;
+			}
+			s.schema = await (await fetch("/api/schema")).json();
+			if (nn.length === 3 && nn[0] === "collections") {
+				s.t0 = s.schema["Collections"][nn[1]].elementTypes[0];
+				s.data = await (await fetch(`/api/${nn[1]}/${nn[2]}`)).json();
+			} else if (nn.length === 2 && nn[0] === "globals") {
+				s.t0 = s.schema["Globals"][nn[1]].type;
+				s.data = await (await fetch(`/api/${nn[1]}`)).json();
+			} else if (nn.length === 0) {
+				s.t0 = Object.keys(s.schema)[0];
+				s.data = JSON.parse(localStorage.getItem("data")) ?? {
+					collections: {
+						pages: []
+					},
+					globals: {
+						header: { $type: "Header" }
+					}
+				};
+			}
 		}
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			content: (() => {
-				return nn.length === 0 ? { $template: "dashboard" } : {
-					$template: nn.length === 2 && nn[0] === "collections" ? "collection" : "object"
-				};
-			})()
+			content: {
+				$template: nn.length === 0 ? "dashboard"
+					: nn.length === 1 && nn[0] === "login" ? "login"
+						: nn.length === 2 && nn[0] === "collections" ? "collection"
+							: "object"
+			}
 		}));
 	}
 

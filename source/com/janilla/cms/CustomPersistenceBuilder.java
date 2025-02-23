@@ -41,9 +41,17 @@ public class CustomPersistenceBuilder extends ApplicationPersistenceBuilder {
 		var fe = Files.exists(databaseFile);
 		var p = super.build();
 		if (!fe) {
-			p.crud(Header.class).create(SeedData.INSTANCE.header());
 			for (var x : SeedData.INSTANCE.pages())
 				p.crud(Page.class).create(x);
+			for (var x : SeedData.INSTANCE.posts())
+				p.crud(Post.class).create(x);
+			for (var x : SeedData.INSTANCE.media())
+				p.crud(Media.class).create(x);
+			for (var x : SeedData.INSTANCE.categories())
+				p.crud(Category.class).create(x);
+			for (var x : SeedData.INSTANCE.users())
+				p.crud(User.class).create(x);
+			p.crud(Header.class).create(SeedData.INSTANCE.header());
 		}
 		return p;
 	}

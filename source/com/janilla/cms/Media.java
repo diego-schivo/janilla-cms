@@ -23,5 +23,12 @@
  */
 package com.janilla.cms;
 
-public record Media(String url, String caption) {
+import com.janilla.persistence.Store;
+
+@Store
+public record Media(Long id, File file, String alt, String caption) {
+
+	public String url() {
+		return file != null ? ("/images/" + file.name()) : null;
+	}
 }

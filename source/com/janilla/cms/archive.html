@@ -5,19 +5,14 @@
     It can be auto-populated by collection or by category, or posts can be individually selected.
     Pagination controls will automatically appear if the number of results exceeds the number of items per page.
   </p>
-  <article>
-    <img src="/images/image-post3.webp" />
-    <h3>Dollar and Sense: The Financial Forecast</h3>
-    <p>Money isn't just currency; it's a language. Dive deep into its nuances, where strategy meets intuition in the vast sea of finance.</p>
-  </article>
-  <article>
-    <img src="/images/image-post2.webp" />
-    <h3>Global Gaze: Beyond the Headlines</h3>
-    <p>Explore the untold and overlooked. A magnified view into the corners of the world, where every story deserves its spotlight.</p>
-  </article>
-  <article>
-    <img src="/images/image-post1.webp" />
-    <h3>Digital Horizons: A Glimpse into Tomorrow</h3>
-    <p>Dive into the marvels of modern innovation, where the only constant is change. A journey where pixels and data converge to craft the future.</p>
-  </article>
+  <!--${articles}-->
+  <template id="article">
+    <article>
+      <a href="/posts/${slug}">
+        <img src="${meta.image}" loading="lazy" />
+        <h3>${meta.title}</h3>
+        <p>${meta.description}</p>
+      </a>
+    </article>
+  </template>
 </article>

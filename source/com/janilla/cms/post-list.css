@@ -1,0 +1,22 @@
+post-list {
+  main,
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  article {
+    border: 1px solid rgba(38, 38, 38, 0.8);
+    border-radius: 0.2rem;
+  }
+
+  img {
+    max-width: 100%;
+  }
+  
+  div {
+    padding: 1rem;
+  }
+}

@@ -23,6 +23,7 @@
  */
 package com.janilla.cms;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -38,7 +39,7 @@ public class PostApi {
 
 	@Handle(method = "POST", path = "/api/posts")
 	public Post create(@Bind(resolver = SeedData.TypeResolver.class) Post post) {
-		return persistence.crud(Post.class).create(post);
+		return persistence.crud(Post.class).create(post.withCreatedAt(Instant.now()));
 	}
 
 	@Handle(method = "GET", path = "/api/posts")

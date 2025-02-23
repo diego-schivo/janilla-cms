@@ -24,18 +24,52 @@
 package com.janilla.cms;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import com.janilla.http.HttpExchange;
 import com.janilla.json.JsonToken;
 import com.janilla.json.ReflectionJsonIterator;
+import com.janilla.persistence.Persistence;
 import com.janilla.web.JsonHandlerFactory;
 
 public class CustomJsonHandlerFactory extends JsonHandlerFactory {
 
+	public Persistence persistence;
+
 	@Override
 	protected Iterator<JsonToken<?>> buildJsonIterator(Object object, HttpExchange exchange) {
-		var rji = (ReflectionJsonIterator) super.buildJsonIterator(object, exchange);
-		rji.setIncludeType(true);
-		return rji;
+		var x = new CustomReflectionJsonIterator();
+		x.setObject(object);
+		x.setIncludeType(true);
+		return x;
+	}
+
+	protected class CustomReflectionJsonIterator extends ReflectionJsonIterator {
+
+		@Override
+		public Iterator<JsonToken<?>> newValueIterator(Object object) {
+			var o = stack().peek();
+			if (o instanceof Map.Entry<?, ?> e) {
+				var n = (String) e.getKey();
+				if (n.equals("media") && object instanceof Long l)
+					object = persistence.crud(Media.class).read(l);
+				switch (n) {
+				case "media":
+					break;
+				case "relatedPosts":
+					if (object instanceof List<?> l && !l.isEmpty() && l.getFirst() instanceof Long)
+						object = persistence.crud(Post.class).read(l.stream().mapToLong(x -> (long) x).toArray())
+								.toList();
+					break;
+				case "categories":
+					if (object instanceof List<?> l && !l.isEmpty() && l.getFirst() instanceof Long)
+						object = persistence.crud(Category.class).read(l.stream().mapToLong(x -> (long) x).toArray())
+								.toList();
+					break;
+				}
+			}
+			return super.newValueIterator(object);
+		}
 	}
 }

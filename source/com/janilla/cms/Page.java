@@ -30,6 +30,6 @@ import com.janilla.persistence.Store;
 
 @Store
 public record Page(Long id, String title, Hero hero, List<@Types( {
-		Archive.class, CallToAction.class, Content.class, Form.class, Media.class }) Object> layout,
+		Archive.class, CallToAction.class, Content.class, Form.class, MediaBlock.class }) Object> layout,
 		@Index String slug){
 }

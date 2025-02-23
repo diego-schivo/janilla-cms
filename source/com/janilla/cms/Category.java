@@ -21,23 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { UpdatableHTMLElement } from "./updatable-html-element.js";
+package com.janilla.cms;
 
-export default class Media extends UpdatableHTMLElement {
+import com.janilla.persistence.Index;
+import com.janilla.persistence.Store;
 
-	static get templateName() {
-		return "media";
-	}
-
-	constructor() {
-		super();
-	}
-
-	async updateDisplay() {
-		const d = this.closest("page-element").data(this.dataset.path);
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			...d
-		}));
-	}
+@Store
+public record Category(Long id, String title, @Index String slug) {
 }
