@@ -132,6 +132,32 @@ export default class AdminPanel extends UpdatableHTMLElement {
 		}
 		this.appendChild(this.interpolateDom({
 			$template: "",
+			header: s.me ? {
+				$template: "header",
+				items: (() => {
+					const xx = [];
+					xx.push({
+						href: "/admin",
+						text: "admin"
+					});
+					if (nn.length >= 2 && nn[0] === "collections") {
+						xx.push({
+							href: `/admin/collections/${nn[1]}`,
+							text: nn[1]
+						});
+						if (nn.length >= 3)
+							xx.push({
+								href: `/admin/collections/${nn[1]}/${nn[2]}`,
+								text: nn[2]
+							});
+					}
+					delete xx[xx.length - 1].href;
+					return xx;
+				})().map(x => ({
+					$template: x.href ? "link-item" : "text-item",
+					...x
+				}))
+			} : null,
 			content: {
 				$template: nn.length === 0 ? "dashboard"
 					: nn.length === 1 && nn[0] === "login" ? "login"

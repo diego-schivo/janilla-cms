@@ -1,6 +1,9 @@
 lucide-icon {
+  display: block;
+
   svg {
     display: block;
+    height: 1rem;
     width: 1rem;
   }
 }
