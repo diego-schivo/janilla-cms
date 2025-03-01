@@ -1,4 +1,4 @@
-list-field {
+list-control {
   > ol > li > article {
     border: 1px solid rgb(74, 74, 74);
     border-radius: 0.25rem;
@@ -18,7 +18,7 @@ list-field {
 	}
 
 	&:has(> header [type="checkbox"]:not(:checked)) {
-	  > object-field {
+	  > object-control {
 	    display: none;
 	  }
 	}

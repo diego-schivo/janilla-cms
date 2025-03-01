@@ -1,14 +1,30 @@
 <header>
   <h1>${label}</h1>
-  <form>
-    <button>Create New</button>
-  </form>
+  <button>Create New</button>
 </header>
-<ol>
-  <!--${items}-->
-</ol>
-<template id="item">
-  <li>
-    <a href="${href}">[${title}]</a>
-  </li>
-</template>
+<table>
+  <thead>
+    <tr>
+      <!--${headers}-->
+      <template id="header">
+        <th>${text}</th>
+      </template>
+    </tr>
+  </thead>
+  <tbody>
+    <!--${rows}-->
+    <template id="row">
+      <tr>
+        <!--${cells}-->
+      </tr>
+    </template>
+    <template id="link-cell">
+      <td>
+        <a href="${href}">${text}</a>
+      </td>
+    </template>
+    <template id="cell">
+      <td>${text}</td>
+    </template>
+  </tbody>
+</table>

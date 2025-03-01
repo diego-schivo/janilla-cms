@@ -23,10 +23,14 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class DashboardView extends UpdatableHTMLElement {
+export default class RichTextControl extends UpdatableHTMLElement {
+
+	static get observedAttributes() {
+		return ["data-key", "data-path"];
+	}
 
 	static get templateName() {
-		return "dashboard-view";
+		return "rich-text-control";
 	}
 
 	constructor() {
@@ -36,42 +40,70 @@ export default class DashboardView extends UpdatableHTMLElement {
 	connectedCallback() {
 		super.connectedCallback();
 		this.addEventListener("click", this.handleClick);
+		this.addEventListener("keyup", this.handleKeyUp);
+		this.addEventListener("input", this.handleInput);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		this.removeEventListener("click", this.handleClick);
+		this.removeEventListener("keyup", this.handleKeyUp);
+		this.removeEventListener("input", this.handleInput);
 	}
 
-	handleClick = async event => {
+	handleClick = event => {
 		const b = event.target.closest("button");
-		if (!b)
-			return;
+		const ce = event.target.closest("[contenteditable]");
+		if (b) {
 			event.stopPropagation();
-		const a = b.previousElementSibling;
-		const t = a.getAttribute("href").split("/").at(-1);
-		const e = await (await fetch(`/api/${t}`, {
-			method: "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify({})
-		})).json();
-		history.pushState(undefined, "", `/admin/collections/${t}/${e.id}`);
-		dispatchEvent(new CustomEvent("popstate"));
+			switch (b.name) {
+				case "type":
+					document.execCommand("formatBlock", false, "<p>");
+					break;
+				case "heading-1":
+				case "heading-2":
+				case "heading-3":
+				case "heading-4":
+					document.execCommand("formatBlock", false, `<h${b.name.charAt(b.name.length - 1)}>`);
+					break;
+				case "bold":
+				case "italic":
+				case "underline":
+					document.execCommand(b.name);
+					break;
+				case "link":
+					const u = prompt("URL");
+					if (u)
+						document.execCommand("createLink", false, u);
+					break;
+			}
+		} else if (!ce)
+			return;
+		this.requestUpdate();
+	}
+
+	handleKeyUp = event => {
+		const ce = event.target.closest("[contenteditable]");
+		if (!ce)
+			return;
+		this.requestUpdate();
+	}
+
+	handleInput = event => {
+		const ce = event.target.closest("[contenteditable]");
+		if (!ce)
+			return;
+		if (!ce.firstElementChild)
+			document.execCommand("formatBlock", false, "<p>");
 	}
 
 	async updateDisplay() {
-		const s = this.closest("admin-panel").state;
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			items: Object.entries(s.schema["Data"]).map(([k, v]) => ({
-				$template: "group",
-				name: k,
-				items: Object.keys(s.schema[v.type]).map(x => ({
-					$template: "card",
-					href: `/admin/${k}/${x}`,
-					name: x,
-					button: k === "collections" ? { $template: "button" } : null
-				}))
+			items: ["type", "heading-1", "heading-2", "heading-3", "heading-4", "bold", "italic", "underline", "link"].map(x => ({
+				$template: "item",
+				name: x,
+				class: ["bold", "italic", "underline"].includes(x) && document.queryCommandState(x) ? "active" : null
 			}))
 		}));
 	}

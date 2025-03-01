@@ -33,6 +33,31 @@ export default class Root extends UpdatableHTMLElement {
 		super();
 	}
 
+	connectedCallback() {
+		this.addEventListener("click", this.handleClick);
+		addEventListener("popstate", this.handlePopState);
+		dispatchEvent(new CustomEvent("popstate"));
+	}
+
+	disconnectedCallback() {
+		this.removeEventListener("click", this.handleClick);
+		removeEventListener("popstate", this.handlePopState);
+	}
+
+	handleClick = event => {
+		const a = event.target.closest("a");
+		if (!a?.href)
+			return;
+		event.preventDefault();
+		const u = new URL(a.href);
+		history.pushState(undefined, "", u.pathname + u.search);
+		dispatchEvent(new CustomEvent("popstate"));
+	}
+
+	handlePopState = () => {
+		this.requestUpdate();
+	}
+
 	async updateDisplay() {
 		const m = location.pathname.match(/^\/admin(\/.*)?$/);
 		this.appendChild(this.interpolateDom(m ? {
@@ -47,7 +72,6 @@ export default class Root extends UpdatableHTMLElement {
 					...x
 				}))
 			},
-			//content: { $template: location.pathname.startsWith("/posts/") ? "post" : "page" }
 			content: {
 				$template: (() => {
 					const m2 = location.pathname.match(/^\/posts(\/.*)?$/);

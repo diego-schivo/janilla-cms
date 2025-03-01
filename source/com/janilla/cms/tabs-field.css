@@ -13,8 +13,11 @@ tabs-field {
     padding: 0 1rem;
 
     button {
-      font-size: 16px;
-      line-height: 20px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      font-size: 1rem;
+      line-height: 1.25rem;
       padding-bottom: 0.5rem;
     }
 

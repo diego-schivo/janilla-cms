@@ -25,6 +25,10 @@ import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
 export default class AdminPanel extends UpdatableHTMLElement {
 
+	static get observedAttributes() {
+		return ["data-path"];
+	}
+
 	static get templateName() {
 		return "admin-panel";
 	}
@@ -53,6 +57,9 @@ export default class AdminPanel extends UpdatableHTMLElement {
 		switch (b.name) {
 			case "open-menu":
 				this.querySelector("dialog").showModal();
+				break;
+			case "close-menu":
+				this.querySelector("dialog").close();
 				break;
 			case "logout":
 				await fetch("/api/users/logout", { method: "POST" });
@@ -97,10 +104,12 @@ export default class AdminPanel extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const p = this.dataset.path;
-		const nn = p ? p.split(".") : [];
 		const s = this.state;
 		s.me = await (await fetch("/api/users/me")).json();
+		let p = this.dataset.path;
+		if (p === "account")
+			p = `collections.users.${s.me.id}`;
+		const nn = p ? p.split(".") : [];
 		if (!s.me) {
 			if (p !== "login") {
 				location.href = "/admin/login";
@@ -138,32 +147,65 @@ export default class AdminPanel extends UpdatableHTMLElement {
 					const xx = [];
 					xx.push({
 						href: "/admin",
-						text: "admin"
+						icon: "house"
 					});
-					if (nn.length >= 2 && nn[0] === "collections") {
-						xx.push({
-							href: `/admin/collections/${nn[1]}`,
-							text: nn[1]
-						});
-						if (nn.length >= 3)
+					switch (nn[0]) {
+						case "collections":
 							xx.push({
-								href: `/admin/collections/${nn[1]}/${nn[2]}`,
-								text: nn[2]
+								href: `/admin/collections/${nn[1]}`,
+								text: nn[1]
 							});
+							if (nn[2])
+								xx.push({
+									href: `/admin/collections/${nn[1]}/${nn[2]}`,
+									text: this.title(s.data)
+								});
+							break;
+						case "globals":
+							xx.push({
+								href: `/admin/globals/${nn[1]}`,
+								text: nn[1]
+							});
+							break;
 					}
 					delete xx[xx.length - 1].href;
 					return xx;
 				})().map(x => ({
-					$template: x.href ? "link-item" : "text-item",
-					...x
+					$template: x.href ? "link-item" : "item",
+					...x,
+					content: x.icon ? {
+						$template: "icon",
+						name: x.icon
+					} : x.text
 				}))
 			} : null,
 			content: {
-				$template: nn.length === 0 ? "dashboard"
-					: nn.length === 1 && nn[0] === "login" ? "login"
-						: nn.length === 2 && nn[0] === "collections" ? "collection"
-							: "object"
-			}
+				$template: (() => {
+					switch (nn[0]) {
+						case "login":
+							return "login";
+						case "collections":
+							return nn.length === 2 ? "collection" : "object";
+						case "globals":
+							return "object";
+						default:
+							return "dashboard";
+					}
+				})()
+			},
+			dialog: s.me ? {
+				$template: "dialog",
+				groups: Object.entries(s.schema["Data"]).map(([k, v]) => ({
+					$template: "group",
+					name: k,
+					checked: true,
+					links: Object.keys(s.schema[v.type]).map(x => ({
+						$template: "link",
+						href: `/admin/${k}/${x}`,
+						name: x
+					}))
+				}))
+			} : null
 		}));
 	}
 
@@ -204,5 +246,84 @@ export default class AdminPanel extends UpdatableHTMLElement {
 					};
 				}
 		return f;
+	}
+
+	label(path) {
+		switch (path) {
+			case "hero":
+			case "hero.richText":
+				return null;
+			default:
+				return path.split(".").at(-1).split(/(?=[A-Z])/).map(x => x.toLowerCase()).join(" ");
+		}
+	}
+
+	title(entity) {
+		switch (entity.$type) {
+			case "User":
+				return entity.name;
+			default:
+				return entity.title;
+		}
+	}
+
+	headers(entitySlug) {
+		switch (entitySlug) {
+			case "users":
+				return ["name", "email"];
+			default:
+				return ["title", "slug"];
+		}
+	}
+
+	options(path) {
+		switch (path) {
+			case "hero.type":
+				return ["none", "highImpact", "mediumImpact", "lowImpact"];
+		}
+	}
+
+	controlTemplate(path, property) {
+		switch (property.type) {
+			case "Boolean":
+				return "checkbox";
+			case "File":
+				return "file";
+			case "Instant":
+				return "text";
+			case "String":
+				switch (path) {
+					case "hero.richText":
+						return "rich-text";
+					case "hero.type":
+						return "select";
+					default:
+						return "text";
+				}
+			case "List":
+				return property.referenceType ? "reference-list" : "list";
+			case "Long":
+				return property.referenceType ? "reference" : "text";
+			default:
+				return "object";
+		}
+	}
+
+	tabs(type) {
+		switch (type) {
+			case "Page":
+				return {
+					hero: ["hero"],
+					content: ["layout"]
+				};
+			case "Post":
+				return {
+					content: ["heroImage", "content"],
+					meta: ["relatedPosts", "categories"],
+					seo: ["meta"]
+				};
+			default:
+				return null;
+		}
 	}
 }

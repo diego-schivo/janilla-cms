@@ -23,14 +23,14 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class ListField extends UpdatableHTMLElement {
+export default class ListControl extends UpdatableHTMLElement {
 
 	static get observedAttributes() {
 		return ["data-key", "data-path"];
 	}
 
 	static get templateName() {
-		return "list-field";
+		return "list-control";
 	}
 
 	constructor() {
@@ -87,7 +87,6 @@ export default class ListField extends UpdatableHTMLElement {
 		s.nextKey = s.field.data.length;
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			// label: p.substring(p.lastIndexOf(".") + 1),
 			items: s.field.data.map((x, i) => ({
 				$template: "item",
 				type: x.$type,

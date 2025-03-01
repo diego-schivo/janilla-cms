@@ -23,14 +23,14 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class TextField extends UpdatableHTMLElement {
+export default class SelectControl extends UpdatableHTMLElement {
 
 	static get observedAttributes() {
 		return ["data-key", "data-path"];
 	}
 
 	static get templateName() {
-		return "text-field";
+		return "select-control";
 	}
 
 	constructor() {
@@ -38,14 +38,18 @@ export default class TextField extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const af = this.closest("admin-panel");
+		const ap = this.closest("admin-panel");
 		const p = this.dataset.path;
-		const f = af.field(p);
+		const f = ap.field(p);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			label: p.substring(p.lastIndexOf(".") + 1),
 			name: p,
-			value: f.data
+			options: ap.options(p).map(x => ({
+				$template: "option",
+				value: x,
+				selected: x === f.data,
+				text: x
+			}))
 		}));
 	}
 }

@@ -16,11 +16,18 @@
 </template>
 <template id="link-item">
   <li>
-    <a href="${href}">${text}</a>
+    <a href="${href}">
+      <!--${content}-->
+    </a>
   </li>
 </template>
-<template id="text-item">
-  <li>${text}</li>
+<template id="item">
+  <li>
+    <!--${content}-->
+  </li>
+</template>
+<template id="icon">
+  <lucide-icon data-name="${name}"></lucide-icon>
 </template>
 <!--${content}-->
 <template id="dashboard">
@@ -34,12 +41,41 @@
 </template>
 <template id="object">
   <form autocomplete="off">
-    <object-field data-path="${path}"></object-field>
+    <object-control data-path="${path}"></object-control>
     <button>save</button>
   </form>
 </template>
-<dialog>
-  <button type="button" name="logout">
-    <lucide-icon data-name="log-out"></lucide-icon>
-  </button>
-</dialog>
+<!--${dialog}-->
+<template id="dialog">
+  <dialog>
+    <button type="button" name="close-menu">
+      <lucide-icon data-name="x"></lucide-icon>
+    </button>
+    <nav>
+      <ul>
+        <!--${groups}-->
+      </ul>
+    </nav>
+    <button type="button" name="logout">
+      <lucide-icon data-name="log-out"></lucide-icon>
+    </button>
+  </dialog>
+</template>
+<template id="group">
+  <li>
+    <label>
+      ${name}
+      <input type="checkbox" checked="${checked}" />
+      <lucide-icon data-name="chevron-down"></lucide-icon>
+      <lucide-icon data-name="chevron-up"></lucide-icon>
+    </label>
+    <ul>
+      <!--${links}-->
+    </ul>
+  </li>
+</template>
+<template id="link">
+  <li>
+    <a href="${href}">${name}</a>
+  </li>
+</template>

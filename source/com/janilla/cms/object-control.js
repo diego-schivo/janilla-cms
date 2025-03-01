@@ -23,14 +23,14 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class ObjectField extends UpdatableHTMLElement {
+export default class ObjectControl extends UpdatableHTMLElement {
 
 	static get observedAttributes() {
 		return ["data-key", "data-path"];
 	}
 
 	static get templateName() {
-		return "object-field";
+		return "object-control";
 	}
 
 	constructor() {
@@ -38,55 +38,30 @@ export default class ObjectField extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const af = this.closest("admin-panel");
+		const ap = this.closest("admin-panel");
 		const p = this.dataset.path;
-		const f = af.field(p);
+		const f = ap.field(p);
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			...this.dataset,
 			...f,
 			items: (() => {
-				const ff = Object.entries(f.properties).map(([k, v]) => ({
-					$template: (() => {
-						switch (v.type) {
-							case "Boolean":
-								return "checkbox";
-							case "File":
-								return "file";
-							case "Instant":
-							case "String":
-								return "text";
-							case "List":
-								return v.referenceType ? "reference-list" : "list";
-							case "Long":
-								return v.referenceType ? "reference" : "text";
-							default:
-								return "object";
+				const ff = Object.entries(f.properties).filter(([k, _]) => k !== "id").map(([k, v]) => {
+					const p2 = p ? `${p}.${k}` : k;
+					const ct = ap.controlTemplate(p2, v);
+					return {
+						$template: ["select", "text", "textarea"].includes(ct) ? "label" : "div",
+						label: ap.label(p2),
+						name: k,
+						control: {
+							$template: ct,
+							path: p2,
+							key: this.dataset.key,
+							...v
 						}
-					})(),
-					name: k,
-					label: k.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join(" "),
-					path: p ? `${p}.${k}` : k,
-					key: this.dataset.key,
-					//documentSlug: v.referenceType ? `${v.referenceType.toLowerCase()}s` : null
-					...v
-				}));
-				let nn;
-				switch (f.type) {
-					case "Page":
-						nn = {
-							hero: ["hero"],
-							layout: ["layout"]
-						};
-						break;
-					case "Post":
-						nn = {
-							content: ["heroImage", "content"],
-							meta: ["relatedPosts", "categories"],
-							seo: ["meta"]
-						};
-						break;
-				}
+					};
+				});
+				const nn = ap.tabs(f.type);
 				let ii;
 				if (nn) {
 					const kk = Object.keys(f.properties);
@@ -104,11 +79,13 @@ export default class ObjectField extends UpdatableHTMLElement {
 							buttons: Object.keys(nn).map((x, i) => ({
 								$template: "tabs-button",
 								index: i,
+								selected: `${i === 0}`,
 								label: x
 							})),
 							panels: Object.values(nn).map((x, i) => ({
 								$template: "tabs-panel",
 								index: i,
+								hidden: i !== 0,
 								items: (() => {
 									return x.map(y => ({
 										$template: "item",

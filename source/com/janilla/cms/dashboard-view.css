@@ -10,7 +10,11 @@ dashboard-view {
     gap: 1rem;
   }
 
-  .card {
+  li ul {
+    gap: 0.5rem;
+  }
+
+  article {
     background: rgb(34, 34, 34);
     border: 1px solid rgb(60, 60, 60);
     border-radius: 0.25rem;
@@ -19,5 +23,20 @@ dashboard-view {
     font-weight: 600;
     min-height: 5rem;
     padding: 1rem;
+  }
+
+  div {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  a {
+    text-decoration: none;
+  }
+
+  button {
+    border-radius: 9999px;
+    padding: 0.15rem;
   }
 }

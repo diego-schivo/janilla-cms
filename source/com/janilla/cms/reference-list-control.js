@@ -23,14 +23,14 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class ReferenceListField extends UpdatableHTMLElement {
+export default class ReferenceListControl extends UpdatableHTMLElement {
 
 	static get observedAttributes() {
 		return ["data-key", "data-path"];
 	}
 
 	static get templateName() {
-		return "reference-list-field";
+		return "reference-list-control";
 	}
 
 	constructor() {

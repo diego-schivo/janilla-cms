@@ -11,6 +11,16 @@
 </template>
 <template id="card">
   <li>
-    <a href="${href}" class="card">${name}</a>
+    <article>
+      <div>
+        <a href="${href}">${name}</a>
+        <!--${button}-->
+      </div>
+    </article>
   </li>
+</template>
+<template id="button">
+  <button>
+    <lucide-icon data-name="plus"></lucide-icon>
+  </button>
 </template>

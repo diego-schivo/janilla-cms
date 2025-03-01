@@ -23,56 +23,28 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class DashboardView extends UpdatableHTMLElement {
+export default class TextControl extends UpdatableHTMLElement {
+
+	static get observedAttributes() {
+		return ["data-key", "data-path"];
+	}
 
 	static get templateName() {
-		return "dashboard-view";
+		return "text-control";
 	}
 
 	constructor() {
 		super();
 	}
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.addEventListener("click", this.handleClick);
-	}
-
-	disconnectedCallback() {
-		super.disconnectedCallback();
-		this.removeEventListener("click", this.handleClick);
-	}
-
-	handleClick = async event => {
-		const b = event.target.closest("button");
-		if (!b)
-			return;
-			event.stopPropagation();
-		const a = b.previousElementSibling;
-		const t = a.getAttribute("href").split("/").at(-1);
-		const e = await (await fetch(`/api/${t}`, {
-			method: "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify({})
-		})).json();
-		history.pushState(undefined, "", `/admin/collections/${t}/${e.id}`);
-		dispatchEvent(new CustomEvent("popstate"));
-	}
-
 	async updateDisplay() {
-		const s = this.closest("admin-panel").state;
+		const ap = this.closest("admin-panel");
+		const p = this.dataset.path;
+		const f = ap.field(p);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			items: Object.entries(s.schema["Data"]).map(([k, v]) => ({
-				$template: "group",
-				name: k,
-				items: Object.keys(s.schema[v.type]).map(x => ({
-					$template: "card",
-					href: `/admin/${k}/${x}`,
-					name: x,
-					button: k === "collections" ? { $template: "button" } : null
-				}))
-			}))
+			name: p,
+			value: f.data
 		}));
 	}
 }

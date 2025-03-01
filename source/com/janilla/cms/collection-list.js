@@ -58,17 +58,28 @@ export default class CollectionList extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const af = this.closest("admin-panel");
-		const p = af.dataset.path;
+		const ap = this.closest("admin-panel");
+		const p = ap.dataset.path;
 		const nn = p.split(".");
 		const d = await (await fetch(`/api/${nn[1]}`)).json();
+		const hh = ap.headers(nn[1]);
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			label: nn[1],
-			items: d.map(x => ({
-				$template: "item",
-				href: `/admin/${p.replaceAll(".", "/")}/${x.id}`,
-				...x
+			headers: hh.map(x => ({
+				$template: "header",
+				text: x
+			})),
+			rows: d.map(x => ({
+				$template: "row",
+				cells: (() => {
+					const cc = hh.map(y => ({ text: x[y] }));
+					cc[0].href = `/admin/${p.replaceAll(".", "/")}/${x.id}`;
+					return cc;
+				})().map(y => ({
+					$template: y.href ? "link-cell" : "cell",
+					...y
+				}))
 			}))
 		}));
 	}
