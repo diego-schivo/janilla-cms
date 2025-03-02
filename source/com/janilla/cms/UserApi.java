@@ -25,60 +25,22 @@ package com.janilla.cms;
 
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Stream;
 
 import com.janilla.json.Jwt;
-import com.janilla.persistence.Persistence;
-import com.janilla.reflect.Reflection;
 import com.janilla.web.Handle;
-import com.janilla.web.NotFoundException;
 
-public class UserApi {
+@Handle(path = "/api/users")
+public class UserApi extends CrudApi<User> {
+
+	public UserApi() {
+		super(User.class);
+	}
 
 	public Properties configuration;
 
-	public Persistence persistence;
-
-	@Handle(method = "POST", path = "/api/users")
-	public User create(User user) {
-		return persistence.crud(User.class).create(user);
-	}
-
-	@Handle(method = "GET", path = "/api/users")
-	public Stream<User> read() {
-		var pc = persistence.crud(User.class);
-		return pc.read(pc.list());
-	}
-
-	@Handle(method = "GET", path = "/api/users/(\\d+)")
-	public User read(long id) {
-		var p = persistence.crud(User.class).read(id);
-		if (p == null)
-			throw new NotFoundException("user " + id);
-		return p;
-	}
-
-	@Handle(method = "PUT", path = "/api/users/(\\d+)")
-	public User update(long id, User user) {
-		var p = persistence.crud(User.class).update(id, x -> Reflection.copy(user, x, y -> !Set.of("id").contains(y)));
-		if (p == null)
-			throw new NotFoundException("user " + id);
-		return p;
-	}
-
-	@Handle(method = "DELETE", path = "/api/users/(\\d+)")
-	public User delete(long id) {
-		var p = persistence.crud(User.class).delete(id);
-		if (p == null)
-			throw new NotFoundException("user " + id);
-		return p;
-	}
-
-	@Handle(method = "POST", path = "/api/users/login")
+	@Handle(method = "POST", path = "login")
 	public User login(User user, CustomHttpExchange exchange) {
-		var uc = persistence.crud(User.class);
-		var u = uc.read(uc.find("email", user.email()));
+		var u = crud().read(crud().find("email", user.email()));
 		if (u == null || !u.password().equals(user.password()))
 			return null;
 		var h = Map.of("alg", "HS256", "typ", "JWT");
@@ -88,12 +50,12 @@ public class UserApi {
 		return u;
 	}
 
-	@Handle(method = "POST", path = "/api/users/logout")
+	@Handle(method = "POST", path = "logout")
 	public void logout(User user, CustomHttpExchange exchange) {
 		exchange.setSessionCookie(null);
 	}
 
-	@Handle(method = "GET", path = "/api/users/me")
+	@Handle(method = "GET", path = "me")
 	public User me(CustomHttpExchange exchange) {
 		return exchange.sessionUser();
 	}

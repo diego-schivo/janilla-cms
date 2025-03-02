@@ -23,52 +23,12 @@
  */
 package com.janilla.cms;
 
-import java.time.Instant;
-import java.util.Set;
-import java.util.stream.Stream;
-
-import com.janilla.persistence.Persistence;
-import com.janilla.reflect.Reflection;
-import com.janilla.web.Bind;
 import com.janilla.web.Handle;
-import com.janilla.web.NotFoundException;
 
-public class PostApi {
+@Handle(path = "/api/posts")
+public class PostApi extends CrudApi<Post> {
 
-	public Persistence persistence;
-
-	@Handle(method = "POST", path = "/api/posts")
-	public Post create(@Bind(resolver = SeedData.TypeResolver.class) Post post) {
-		return persistence.crud(Post.class).create(post.withCreatedAt(Instant.now()));
-	}
-
-	@Handle(method = "GET", path = "/api/posts")
-	public Stream<Post> read(@Bind("slug") String slug) {
-		var pc = persistence.crud(Post.class);
-		return pc.read(slug != null && !slug.isBlank() ? pc.filter("slug", slug) : pc.list());
-	}
-
-	@Handle(method = "GET", path = "/api/posts/(\\d+)")
-	public Post read(long id) {
-		var p = persistence.crud(Post.class).read(id);
-		if (p == null)
-			throw new NotFoundException("post " + id);
-		return p;
-	}
-
-	@Handle(method = "PUT", path = "/api/posts/(\\d+)")
-	public Post update(long id, @Bind(resolver = SeedData.TypeResolver.class) Post post) {
-		var p = persistence.crud(Post.class).update(id, x -> Reflection.copy(post, x, y -> !Set.of("id").contains(y)));
-		if (p == null)
-			throw new NotFoundException("post " + id);
-		return p;
-	}
-
-	@Handle(method = "DELETE", path = "/api/posts/(\\d+)")
-	public Post delete(long id) {
-		var p = persistence.crud(Post.class).delete(id);
-		if (p == null)
-			throw new NotFoundException("post " + id);
-		return p;
+	public PostApi() {
+		super(Post.class);
 	}
 }

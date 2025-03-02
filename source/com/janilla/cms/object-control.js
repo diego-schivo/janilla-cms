@@ -47,8 +47,8 @@ export default class ObjectControl extends UpdatableHTMLElement {
 			...f,
 			items: (() => {
 				const ff = Object.entries(f.properties).filter(([k, _]) => k !== "id").map(([k, v]) => {
+					const ct = ap.controlTemplate(ap.field(k, f));
 					const p2 = p ? `${p}.${k}` : k;
-					const ct = ap.controlTemplate(p2, v);
 					return {
 						$template: ["select", "text", "textarea"].includes(ct) ? "label" : "div",
 						label: ap.label(p2),

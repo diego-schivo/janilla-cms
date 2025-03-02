@@ -37,11 +37,12 @@ import com.janilla.net.Net;
 import com.janilla.util.Util;
 import com.janilla.web.Handle;
 
+@Handle(path = "/api/upload")
 public class UploadApi {
 
 	public Properties configuration;
 
-	@Handle(method = "POST", path = "/api/upload")
+	@Handle(method = "POST")
 	public Path create(HttpRequest request) throws IOException {
 		byte[] bb;
 		{

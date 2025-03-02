@@ -23,52 +23,12 @@
  */
 package com.janilla.cms;
 
-import java.util.Set;
-import java.util.stream.Stream;
-
-import com.janilla.persistence.Persistence;
-import com.janilla.reflect.Reflection;
-import com.janilla.web.Bind;
 import com.janilla.web.Handle;
-import com.janilla.web.NotFoundException;
 
-public class CategoryApi {
+@Handle(path = "/api/categories")
+public class CategoryApi extends CrudApi<Category> {
 
-	public Persistence persistence;
-
-	@Handle(method = "POST", path = "/api/categories")
-	public Category create(Category category) {
-		return persistence.crud(Category.class).create(category);
-	}
-
-	@Handle(method = "GET", path = "/api/categories")
-	public Stream<Category> read(@Bind("slug") String slug) {
-		var pc = persistence.crud(Category.class);
-		return pc.read(slug != null && !slug.isBlank() ? pc.filter("slug", slug) : pc.list());
-	}
-
-	@Handle(method = "GET", path = "/api/categories/(\\d+)")
-	public Category read(long id) {
-		var p = persistence.crud(Category.class).read(id);
-		if (p == null)
-			throw new NotFoundException("category " + id);
-		return p;
-	}
-
-	@Handle(method = "PUT", path = "/api/categories/(\\d+)")
-	public Category update(long id, Category category) {
-		var p = persistence.crud(Category.class).update(id,
-				x -> Reflection.copy(category, x, y -> !Set.of("id").contains(y)));
-		if (p == null)
-			throw new NotFoundException("category " + id);
-		return p;
-	}
-
-	@Handle(method = "DELETE", path = "/api/categories/(\\d+)")
-	public Category delete(long id) {
-		var p = persistence.crud(Category.class).delete(id);
-		if (p == null)
-			throw new NotFoundException("category " + id);
-		return p;
+	public CategoryApi() {
+		super(Category.class);
 	}
 }

@@ -44,10 +44,10 @@ export default class SelectControl extends UpdatableHTMLElement {
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			name: p,
-			options: ap.options(p).map(x => ({
+			options: [null, ...ap.selectOptions(f)].map(x => ({
 				$template: "option",
 				value: x,
-				selected: x === f.data,
+				selected: x == f.data,
 				text: x
 			}))
 		}));

@@ -1,26 +1,58 @@
 list-control {
-  > ol > li > article {
-    border: 1px solid rgb(74, 74, 74);
-    border-radius: 0.25rem;
-	padding: 1rem;
+  > ol {
+    gap: 1rem;
 
-	> header {
-	  display: flex;
+    &,
+    > li > article {
+      display: flex;
+      flex-direction: column;
+    }
 
-	  h4 {
-	    flex: 1;
-	  }
+    > li > article {
+      border: 1px solid rgb(74, 74, 74);
+      border-radius: 0.25rem;
+      overflow: hidden;
+  
+      > header {
+        align-items: center;
+        background: rgb(34, 34, 34);
+        display: flex;
+        gap: 1rem;
+        padding: 0.5rem 1rem;
+  
+        &:has(input:checked) {
+          lucide-icon:first-of-type {
+            display: none;
+          }
+        }
+  
+        &:has(input:not(:checked)) {
+          lucide-icon:last-of-type,
+          + object-control {
+            display: none;
+          }
+        }
+  
+        h4 {
+          flex: 1;
+        }
+  
+        select {
+          appearance: none;
+          background: transparent;
+          border: none;
+          padding: 0;
+          width: 1rem;
+        }
+  
+        label {
+          cursor: pointer;
+        }
+      }
 
-	  select {
-	    appearance: none;
-	    width: 2rem;
-	  }
-	}
-
-	&:has(> header [type="checkbox"]:not(:checked)) {
-	  > object-control {
-	    display: none;
-	  }
-	}
+      > object-control {
+        padding: 1rem;
+      }
+    }
   }
 }

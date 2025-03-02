@@ -23,31 +23,22 @@
  */
 package com.janilla.cms;
 
-import java.util.Set;
-
-import com.janilla.persistence.Persistence;
-import com.janilla.reflect.Reflection;
 import com.janilla.web.Handle;
-import com.janilla.web.NotFoundException;
 
-public class HeaderApi {
+@Handle(path = "/api/header")
+public class HeaderApi extends CrudApi<Header> {
 
-	public Persistence persistence;
-
-	@Handle(method = "GET", path = "/api/header")
-	public Header read() {
-		var h = persistence.crud(Header.class).read(1);
-		if (h == null)
-			throw new NotFoundException("header " + 1);
-		return h;
+	public HeaderApi() {
+		super(Header.class);
 	}
 
-	@Handle(method = "PUT", path = "/api/header")
+	@Handle(method = "GET")
+	public Header read() {
+		return super.read(1);
+	}
+
+	@Handle(method = "PUT")
 	public Header update(Header header) {
-		var h = persistence.crud(Header.class).update(1,
-				x -> Reflection.copy(header, x, y -> !Set.of("id").contains(y)));
-		if (h == null)
-			throw new NotFoundException("header " + 1);
-		return h;
+		return super.update(1, header);
 	}
 }

@@ -91,15 +91,15 @@ export default class AdminPanel extends UpdatableHTMLElement {
 			xhr.open("POST", "/api/upload", true);
 			xhr.send(fd);
 		}
+		for (const [k, v] of ee) {
+			const i = k.lastIndexOf(".");
+			let f = this.field(k.substring(0, i));
+			f.data[k.substring(i + 1)] = v instanceof File ? { name: v.name } : v;
+		}
 		s.data = await (await fetch(r, {
 			method: "PUT",
 			headers: { "content-type": "application/json" },
-			body: JSON.stringify(ee.reduce((data, [k, v]) => {
-				const i = k.lastIndexOf(".");
-				let f = this.field(k.substring(0, i), data);
-				f.data[k.substring(i + 1)] = v instanceof File ? { name: v.name } : v;
-				return data;
-			}, s.data))
+			body: JSON.stringify(s.data)
 		})).json();
 	}
 
@@ -209,19 +209,22 @@ export default class AdminPanel extends UpdatableHTMLElement {
 		}));
 	}
 
-	field(path, data) {
+	field(path, parent) {
 		const s = this.state;
-		let f = {
+		let f = parent ?? {
 			type: s.t0,
 			properties: s.schema[s.t0],
-			data: data ?? s.data
+			data: s.data
 		};
 		if (path)
 			for (const n of path.split("."))
 				if (f.type === "List") {
-					const d = f.data[parseInt(n)] ??= {};
+					const i = parseInt(n);
+					const d = f.data[i] ??= {};
 					const t = d.$type ?? f.elementTypes[0];
 					f = {
+						parent: f,
+						index: i,
 						type: t,
 						properties: s.schema[t],
 						data: d
@@ -229,6 +232,8 @@ export default class AdminPanel extends UpdatableHTMLElement {
 				} else {
 					const p = f.properties[n];
 					f = {
+						parent: f,
+						name: n,
 						...p,
 						properties: p.type !== "List" && p.type !== "String" ? s.schema[p.type] : null,
 						data: f.data[n] ??= (() => {
@@ -276,15 +281,8 @@ export default class AdminPanel extends UpdatableHTMLElement {
 		}
 	}
 
-	options(path) {
-		switch (path) {
-			case "hero.type":
-				return ["none", "highImpact", "mediumImpact", "lowImpact"];
-		}
-	}
-
-	controlTemplate(path, property) {
-		switch (property.type) {
+	controlTemplate(field) {
+		switch (field.type) {
 			case "Boolean":
 				return "checkbox";
 			case "File":
@@ -292,21 +290,32 @@ export default class AdminPanel extends UpdatableHTMLElement {
 			case "Instant":
 				return "text";
 			case "String":
-				switch (path) {
-					case "hero.richText":
+				switch (field.name) {
+					case "richText":
 						return "rich-text";
-					case "hero.type":
+					case "type":
+					case "appearance":
 						return "select";
 					default:
 						return "text";
 				}
 			case "List":
-				return property.referenceType ? "reference-list" : "list";
+				return field.referenceType ? "reference-list" : "list";
 			case "Long":
-				return property.referenceType ? "reference" : "text";
+				return field.referenceType ? "reference" : "text";
 			default:
 				return "object";
 		}
+	}
+
+	selectOptions(field) {
+		switch (field.name) {
+			case "type":
+				return ["none", "highImpact", "mediumImpact", "lowImpact"];
+			case "appearance":
+				return ["default", "outline"];
+		}
+		return [];
 	}
 
 	tabs(type) {

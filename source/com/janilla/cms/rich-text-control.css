@@ -13,6 +13,13 @@ rich-text-control {
   }
 
   [contenteditable] {
+    /*
     height: 20rem;
+    */
+    outline: none;
+  }
+
+  a {
+    color: rgb(125, 204, 248);
   }
 }

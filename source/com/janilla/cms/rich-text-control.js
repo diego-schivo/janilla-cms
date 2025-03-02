@@ -98,13 +98,21 @@ export default class RichTextControl extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
+		const ap = this.closest("admin-panel");
+		const p = this.dataset.path;
+		const f = ap.field(p);
+		const ce = this.querySelector("[contenteditable]");
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			items: ["type", "heading-1", "heading-2", "heading-3", "heading-4", "bold", "italic", "underline", "link"].map(x => ({
 				$template: "item",
 				name: x,
 				class: ["bold", "italic", "underline"].includes(x) && document.queryCommandState(x) ? "active" : null
-			}))
+			})),
+			name: p,
+			value: ce?.innerHTML ?? f.data
 		}));
+		if (!ce)
+			this.querySelector("[contenteditable]").innerHTML = f.data;
 	}
 }

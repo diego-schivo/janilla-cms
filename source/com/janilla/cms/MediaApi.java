@@ -23,51 +23,12 @@
  */
 package com.janilla.cms;
 
-import java.util.Set;
-import java.util.stream.Stream;
-
-import com.janilla.persistence.Persistence;
-import com.janilla.reflect.Reflection;
 import com.janilla.web.Handle;
-import com.janilla.web.NotFoundException;
 
-public class MediaApi {
+@Handle(path = "/api/media")
+public class MediaApi extends CrudApi<Media> {
 
-	public Persistence persistence;
-
-	@Handle(method = "POST", path = "/api/media")
-	public Media create(Media media) {
-		return persistence.crud(Media.class).create(media);
-	}
-
-	@Handle(method = "GET", path = "/api/media")
-	public Stream<Media> read() {
-		var pc = persistence.crud(Media.class);
-		return pc.read(pc.list());
-	}
-
-	@Handle(method = "GET", path = "/api/media/(\\d+)")
-	public Media read(long id) {
-		var p = persistence.crud(Media.class).read(id);
-		if (p == null)
-			throw new NotFoundException("media " + id);
-		return p;
-	}
-
-	@Handle(method = "PUT", path = "/api/media/(\\d+)")
-	public Media update(long id, Media media) {
-		var p = persistence.crud(Media.class).update(id,
-				x -> Reflection.copy(media, x, y -> !Set.of("id").contains(y)));
-		if (p == null)
-			throw new NotFoundException("media " + id);
-		return p;
-	}
-
-	@Handle(method = "DELETE", path = "/api/media/(\\d+)")
-	public Media delete(long id) {
-		var p = persistence.crud(Media.class).delete(id);
-		if (p == null)
-			throw new NotFoundException("media " + id);
-		return p;
+	public MediaApi() {
+		super(Media.class);
 	}
 }
