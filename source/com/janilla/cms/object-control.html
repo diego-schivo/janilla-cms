@@ -18,26 +18,30 @@
     <!--${control}-->
   </div>
 </template>
-<template id="text">
-  <text-control data-path="${path}" data-key="${key}"></text-control>
-</template>
-<template id="textarea">
-  <textarea-control data-path="${path}" data-key="${key}"></textarea-control>
-</template>
-<template id="rich-text">
-  <rich-text-control data-path="${path}" data-key="${key}"></rich-text-control>
-</template>
-<template id="select">
-  <select-control data-path="${path}" data-key="${key}"></select-control>
-</template>
-<template id="list">
+
+<template id="list-control">
   <list-control data-path="${path}" data-key="${key}"></list-control>
 </template>
-<template id="reference-list">
+<template id="object-control">
+  <object-control data-path="${path}" data-key="${key}"></object-control>
+</template>
+<template id="reference-control">
+  <reference-control data-path="${path}" data-key="${key}"></reference-control>
+</template>
+<template id="reference-list-control">
   <reference-list-control data-path="${path}" data-key="${key}" data-type="${referenceType}"></reference-list-control>
 </template>
-<template id="object">
-  <object-control data-path="${path}" data-key="${key}"></object-control>
+<template id="rich-text-control">
+  <rich-text-control data-path="${path}" data-key="${key}"></rich-text-control>
+</template>
+<template id="select-control">
+  <select-control data-path="${path}" data-key="${key}"></select-control>
+</template>
+<template id="text-control">
+  <text-control data-path="${path}" data-key="${key}"></text-control>
+</template>
+<template id="textarea-control">
+  <textarea-control data-path="${path}" data-key="${key}"></textarea-control>
 </template>
 
 <template id="checkbox">
@@ -45,9 +49,6 @@
 </template>
 <template id="file">
   <file-field data-path="${path}" data-key="${key}"></file-field>
-</template>
-<template id="reference">
-  <reference-field data-path="${path}" data-key="${key}"></reference-field>
 </template>
 <template id="tabs">
   <tabs-field data-key="${key}">

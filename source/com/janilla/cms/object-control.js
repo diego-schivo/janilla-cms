@@ -50,7 +50,7 @@ export default class ObjectControl extends UpdatableHTMLElement {
 					const ct = ap.controlTemplate(ap.field(k, f));
 					const p2 = p ? `${p}.${k}` : k;
 					return {
-						$template: ["select", "text", "textarea"].includes(ct) ? "label" : "div",
+						$template: ["reference-control", "select-control", "text-control", "textarea-control"].includes(ct) ? "label" : "div",
 						label: ap.label(p2),
 						name: k,
 						control: {

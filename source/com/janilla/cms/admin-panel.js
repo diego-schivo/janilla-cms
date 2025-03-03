@@ -284,27 +284,27 @@ export default class AdminPanel extends UpdatableHTMLElement {
 	controlTemplate(field) {
 		switch (field.type) {
 			case "Boolean":
-				return "checkbox";
+				return "checkbox-control";
 			case "File":
-				return "file";
+				return "file-control";
 			case "Instant":
-				return "text";
+				return "text-control";
 			case "String":
 				switch (field.name) {
 					case "richText":
-						return "rich-text";
+						return "rich-text-control";
 					case "type":
 					case "appearance":
-						return "select";
+						return "select-control";
 					default:
-						return "text";
+						return "text-control";
 				}
 			case "List":
-				return field.referenceType ? "reference-list" : "list";
+				return field.referenceType ? "reference-list-control" : "list-control";
 			case "Long":
-				return field.referenceType ? "reference" : "text";
+				return field.referenceType ? "reference-control" : "text-control";
 			default:
-				return "object";
+				return "object-control";
 		}
 	}
 

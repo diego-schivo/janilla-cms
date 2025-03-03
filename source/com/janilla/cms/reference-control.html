@@ -1,8 +1,9 @@
-<label>
-  ${label}
-  <input name="${name}" value="${value.id}" />
-  <button type="button">choose</button>
-</label>
+<div>
+  <img src="${value.url}" loading="lazy" />
+</div>
+<p>${value.file.name}</p>
+<input name="${name}" value="${value.id}" />
+<button type="button">choose</button>
 <dialog>
   <!--${media}-->
   <template id="media">
@@ -12,4 +13,3 @@
     </label>
   </template>
 </dialog>
-

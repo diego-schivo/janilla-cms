@@ -1,0 +1,23 @@
+label:has(reference-control) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+reference-control {
+  div:has(> img) {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  input {
+    box-sizing: border-box;
+    width: 100%;
+  }
+}
