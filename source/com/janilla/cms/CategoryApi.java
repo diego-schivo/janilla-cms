@@ -26,7 +26,7 @@ package com.janilla.cms;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/categories")
-public class CategoryApi extends CrudApi<Category> {
+public class CategoryApi extends CollectionApi<Category> {
 
 	public CategoryApi() {
 		super(Category.class);

@@ -39,70 +39,68 @@ export default class ReferenceListControl extends UpdatableHTMLElement {
 
 	connectedCallback() {
 		super.connectedCallback();
-		this.addEventListener("change", this.handleChange);
 		this.addEventListener("click", this.handleClick);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		this.removeEventListener("change", this.handleChange);
 		this.removeEventListener("click", this.handleClick);
 	}
 
-	handleChange = event => {
-		event.stopPropagation();
-		event.target.closest("dialog").close();
-		const s = this.state;
-		s.field.data.push(s.documents.find(x => x.id == event.target.value));
-		this.requestUpdate();
-	}
-
 	handleClick = async event => {
-		const b = event.target.closest("button");
-		if (!b)
-			return;
-		event.stopPropagation();
 		const s = this.state;
-		switch (b.name) {
-			case "add":
-				const cc = this.closest("admin-panel").state.schema["Collections"];
-				const ds = Object.entries(cc).find(([_, v]) => v.elementTypes[0] === this.dataset.type)[0];
-				s.documents = await (await fetch(`/api/${ds}`)).json();
-				await this.updateDisplay();
-				this.querySelector("dialog").showModal();
-				break;
-			case "close":
-				b.closest("dialog").close();
-				break;
-			case "remove":
-				const li = b.closest("li");
-				const i = Array.prototype.indexOf.call(li.parentElement.children, li);
-				s.field.data.splice(i, 1);
-				await this.updateDisplay();
-				break;
+		const b = event.target.closest("button");
+		if (b) {
+			event.stopPropagation();
+			switch (b.name) {
+				case "add":
+					s.dialog = true;
+					await this.updateDisplay();
+					this.querySelector("dialog").showModal();
+					break;
+				case "close":
+					b.closest("dialog").close();
+					s.dialog = false;
+					break;
+			}
+		}
+		const a = event.target.closest("a");
+		if (a) {
+			event.preventDefault();
+			const id = parseInt(a.getAttribute("href").split("/").at(-1));
+			if (s.dialog) {
+				const cl = this.querySelector("dialog collection-list");
+				s.field.data.push(cl.state.data.find(x => x.id === id));
+				cl.closest("dialog").close();
+				s.dialog = false;
+			} else
+				s.field.data.splice(s.field.data.findIndex(x => x.id === id), 1);
+			this.requestUpdate();
 		}
 	}
 
 	async updateDisplay() {
+		const ap = this.closest("admin-panel");
 		const p = this.dataset.path;
 		const s = this.state;
-		s.field = (() => {
-			const af = this.closest("admin-panel");
-			return af.field(p);
-		})();
+		s.field ??= ap.field(p);
+		const cc = ap.state.schema["Collections"];
+		const cn = Object.entries(cc).find(([_, v]) => v.elementTypes[0] === this.dataset.type)[0];
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			...this.dataset,
 			name: p,
-			items: s.field.data.map((x, i) => ({
-				$template: "item",
+			collection: cn,
+			ids: s.field.data.map(x => x.id).join(),
+			inputs: s.field.data.map((x, i) => ({
+				$template: "input",
 				name: `${p}.${i}`,
-				document: x
+				value: x.id
 			})),
-			documents: s.documents?.map(x => ({
-				$template: "document",
-				...x
-			}))
+			dialog: s.dialog ? {
+				$template: "dialog",
+				collection: cn
+			} : null
 		}));
 	}
 }

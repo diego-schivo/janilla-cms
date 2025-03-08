@@ -23,5 +23,16 @@
  */
 package com.janilla.cms;
 
-public record Form(Boolean enableIntro, String introContent) {
+import java.util.List;
+
+import com.janilla.persistence.Store;
+
+@Store
+public record Form(Long id, String title, List<Field> fields, String submitButtonLabel,
+		ConfirmationType confirmationType, String confirmationMessage, List<Email> emails) {
+
+	public enum ConfirmationType {
+
+		MESSAGE, REDIRECT
+	}
 }

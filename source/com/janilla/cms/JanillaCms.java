@@ -125,10 +125,12 @@ public class JanillaCms {
 		Function<Class<?>, String> f = x -> x.getName().substring(x.getPackageName().length() + 1).replace('$', '.');
 		do {
 			var c = q.remove();
+//			System.out.println("JanillaCms.schema, c=" + c);
 			var m2 = new LinkedHashMap<String, Map<String, Object>>();
 			Reflection.properties(c).forEach(x -> {
+//				System.out.println("JanillaCms.schema, x=" + x);
 				var m3 = new LinkedHashMap<String, Object>();
-				m3.put("type", f.apply(x.type()));
+				m3.put("type", f.apply(x.type().isEnum() ? String.class : x.type()));
 				List<Class<?>> cc;
 				if (x.type() == List.class) {
 					var c2 = (Class<?>) ((ParameterizedType) x.genericType()).getActualTypeArguments()[0];
@@ -140,7 +142,8 @@ public class JanillaCms {
 						if (ta != null)
 							m3.put("referenceType", f.apply(ta.value()[0]));
 					} else {
-						cc = ta != null ? Arrays.asList(ta.value()) : List.of(c2);
+						cc = ta != null ? Arrays.asList(ta.value())
+								: c2.isInterface() ? Arrays.asList(c2.getPermittedSubclasses()) : List.of(c2);
 						m3.put("elementTypes", cc.stream().map(f).toList());
 					}
 				} else if (x.type().getPackageName().startsWith("java.")) {
@@ -149,6 +152,10 @@ public class JanillaCms {
 						if (ta != null)
 							m3.put("referenceType", f.apply(ta.value()[0]));
 					}
+					cc = List.of();
+				} else if (x.type().isEnum()) {
+					m3.put("options",
+							Arrays.stream(x.type().getEnumConstants()).map(y -> ((Enum<?>) y).name()).toList());
 					cc = List.of();
 				} else if (!m1.containsKey(f.apply(x.type())))
 					cc = List.of(x.type());

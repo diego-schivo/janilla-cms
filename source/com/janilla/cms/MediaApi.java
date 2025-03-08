@@ -23,12 +23,27 @@
  */
 package com.janilla.cms;
 
+import java.nio.file.Path;
+import java.util.Properties;
+
+import com.janilla.http.HttpResponse;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/media")
-public class MediaApi extends CrudApi<Media> {
+public class MediaApi extends CollectionApi<Media> {
+
+	public Properties configuration;
 
 	public MediaApi() {
 		super(Media.class);
+	}
+
+	@Handle(method = "GET", path = "file/(.+)")
+	public void file(Path path, HttpResponse response) {
+		var ud = configuration.getProperty("janilla-cms.upload.directory");
+		if (ud.startsWith("~"))
+			ud = System.getProperty("user.home") + ud.substring(1);
+		var f = Path.of(ud).resolve(path.getFileName());
+		CmsResourceHandlerFactory.handle(f, response);
 	}
 }

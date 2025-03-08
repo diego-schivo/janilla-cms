@@ -1,32 +1,17 @@
-<ul>
-  <!--${items}-->
-  <li>
-    <button type="button" name="add">
-      <lucide-icon data-name="circle-plus"></lucide-icon>
-    </button>
-  </li>
-</ul>
-<template id="item">
-  <li>
-    <input type="hidden" name="${name}" value="${document.id}" />
-    ${document.title}
-    <button type="button" name="remove">
-      <lucide-icon data-name="circle-minus"></lucide-icon>
-    </button>
-  </li>
+<collection-list data-name="${collection}" data-ids="${ids}"></collection-list>
+<div>
+  <button type="button" name="add">add</button>
+</div>
+<!--${inputs}-->
+<template id="input">
+  <input type="hidden" name="${name}" value="${value}" />
 </template>
-<dialog>
-  <header>
-    <h2>${type}</h2>
+<!--${dialog}-->
+<template id="dialog">
+  <dialog>
     <button type="button" name="close">
       <lucide-icon data-name="x"></lucide-icon>
     </button>
-  </header>
-  <!--${documents}-->
-  <template id="document">
-    <label>
-      <input type="radio" name="document" value="${id}" />
-      ${title}
-    </label>
-  </template>
-</dialog>
+    <collection-list data-name="${collection}"></collection-list>
+  </dialog>
+</template>

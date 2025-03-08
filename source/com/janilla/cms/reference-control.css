@@ -1,23 +1,18 @@
-label:has(reference-control) {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
 reference-control {
-  div:has(> img) {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
+  dialog {
+    position: relative;
 
-  img {
-    height: 100%;
-    object-fit: cover;
-    width: 100%;
-  }
+    > button[name="close"] {
+      background: transparent;
+      border: none;
+      margin-left: auto;
+      padding: 0;
+      position: absolute;
+      right: 1rem;
 
-  input {
-    box-sizing: border-box;
-    width: 100%;
+      lucide-icon {
+        width: 2rem;
+      }
+    }
   }
 }

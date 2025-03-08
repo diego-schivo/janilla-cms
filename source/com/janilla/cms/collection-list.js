@@ -25,6 +25,10 @@ import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
 export default class CollectionList extends UpdatableHTMLElement {
 
+	static get observedAttributes() {
+		return ["data-ids", "data-name"];
+	}
+
 	static get templateName() {
 		return "collection-list";
 	}
@@ -35,46 +39,77 @@ export default class CollectionList extends UpdatableHTMLElement {
 
 	connectedCallback() {
 		super.connectedCallback();
-		this.addEventListener("submit", this.handleSubmit);
+		this.addEventListener("click", this.handleClick);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		this.removeEventListener("submit", this.handleSubmit);
+		this.removeEventListener("click", this.handleClick);
 	}
 
-	handleSubmit = async event => {
-		event.preventDefault();
+	handleClick = async event => {
+		const b = event.target.closest("button");
+		if (!b)
+			return;
 		event.stopPropagation();
-		const af = this.closest("admin-panel");
-		const p = af.dataset.path;
-		const nn = p.split(".");
-		const e = await (await fetch(`/api/${nn[1]}`, {
-			method: "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify({})
-		})).json();
-		location.href = `/admin/${nn.join("/")}/${e.id}`;
+		switch (b.name) {
+			case "create":
+				const n = this.dataset.name;
+				const e = await (await fetch(`/api/${n}`, {
+					method: "POST",
+					headers: { "content-type": "application/json" },
+					body: JSON.stringify({ $type: this.closest("admin-panel").state.schema["Collections"][n].elementTypes[0] })
+				})).json();
+				history.pushState(undefined, "", `/admin/collections/${n}/${e.id}`);
+				dispatchEvent(new CustomEvent("popstate"));
+				break;
+		}
 	}
 
 	async updateDisplay() {
+		const s = this.state;
+		const pe = this.parentElement;
+		const pen = pe.tagName.toLowerCase();
+		s.dialog ??= pen === "dialog";
+		const n = this.dataset.name;
+		switch (pen) {
+			case "reference-control":
+				s.data = pe.state.field.data.id ? [pe.state.field.data] : [];
+				break;
+			case "reference-list-control":
+				s.data ??= pe.state.field.data;
+				break;
+			default:
+				s.data ??= await (await fetch(`/api/${n}`)).json();
+				break;
+		}
 		const ap = this.closest("admin-panel");
-		const p = ap.dataset.path;
-		const nn = p.split(".");
-		const d = await (await fetch(`/api/${nn[1]}`)).json();
-		const hh = ap.headers(nn[1]);
+		const hh = ap.headers(n);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			label: nn[1],
-			headers: hh.map(x => ({
+			header: !pen.endsWith("-control") ? {
 				$template: "header",
+				title: n
+			} : null,
+			heads: hh.map(x => ({
+				$template: "head",
 				text: x
 			})),
-			rows: d.map(x => ({
+			rows: s.data.map(x => ({
 				$template: "row",
 				cells: (() => {
-					const cc = hh.map(y => ({ text: x[y] }));
-					cc[0].href = `/admin/${p.replaceAll(".", "/")}/${x.id}`;
+					const cc = hh.map(y => {
+						const z = x[y];
+						return {
+							content: typeof z === "object" && z?.$type === "File" ? {
+								$template: "media",
+								...x
+							} : z
+						};
+					});
+					cc[0].href = `/admin/collections/${n}/${x.id}`;
+					if (!cc[0].content)
+						cc[0].content = x.id;
 					return cc;
 				})().map(y => ({
 					$template: y.href ? "link-cell" : "cell",

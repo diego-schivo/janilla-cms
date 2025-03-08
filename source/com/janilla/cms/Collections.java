@@ -26,5 +26,5 @@ package com.janilla.cms;
 import java.util.List;
 
 public record Collections(List<Page> pages, List<Post> posts, List<Media> media, List<Category> categories,
-		List<User> users) {
+		List<User> users, List<Form> forms) {
 }

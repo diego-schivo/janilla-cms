@@ -21,31 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { UpdatableHTMLElement } from "./updatable-html-element.js";
+package com.janilla.cms;
 
-export default class CheckboxField extends UpdatableHTMLElement {
+import com.janilla.web.Handle;
 
-	static get observedAttributes() {
-		return ["data-key", "data-path"];
-	}
+@Handle(path = "/api/forms")
+public class FormApi extends CollectionApi<Form> {
 
-	static get templateName() {
-		return "checkbox-field";
-	}
-
-	constructor() {
-		super();
-	}
-
-	async updateDisplay() {
-		const af = this.closest("admin-panel");
-		const p = this.dataset.path;
-		const f = af.field(p);
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			label: p.substring(p.lastIndexOf(".") + 1),
-			name: p,
-			checked: f.data
-		}));
+	public FormApi() {
+		super(Form.class);
 	}
 }

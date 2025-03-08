@@ -23,5 +23,5 @@
  */
 package com.janilla.cms;
 
-public record Globals(Header header) {
+public record Globals(Header header, Footer footer) {
 }

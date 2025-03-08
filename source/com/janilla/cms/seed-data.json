@@ -74,7 +74,7 @@
 			},
 			"layout": [
 				{
-					"$type": "Form",
+					"$type": "FormBlock",
 					"introContent": "<h3>Example contact form:</h3>",
 					"enableIntro": "true"
 				}
@@ -93,6 +93,7 @@
 				"image": "/images/image-post1.webp",
 				"description": "Dive into the marvels of modern innovation, where the only constant is change. A journey where pixels and data converge to craft the future."
 			},
+			"slug": "digital-horizons-a-glimpse-into-tomorrow",
 			"createdAt": "2025-02-16T09:07:44.965918Z"
 		},
 		{
@@ -105,6 +106,7 @@
 				"image": "/images/image-post2.webp",
 				"description": "Explore the untold and overlooked. A magnified view into the corners of the world, where every story deserves its spotlight."
 			},
+			"slug": "global-gaze-beyond-the-headlines",
 			"createdAt": "2025-02-16T09:08:44.965918Z"
 		},
 		{
@@ -135,7 +137,7 @@
 				"$type": "File",
 				"name": "image-post1.webp"
 			},
-			"alt": "",
+			"alt": "Curving abstract shapes with an orange and blue gradient",
 			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
 		},
 		{
@@ -145,7 +147,7 @@
 				"$type": "File",
 				"name": "image-post2.webp"
 			},
-			"alt": "",
+			"alt": "Curving abstract shapes with an orange and blue gradient",
 			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
 		},
 		{
@@ -155,7 +157,7 @@
 				"$type": "File",
 				"name": "image-post3.webp"
 			},
-			"alt": "",
+			"alt": "Curving abstract shapes with an orange and blue gradient",
 			"caption": "<p>Photo by <a href=\"https://unsplash.com/@kirp\" rel=\"noopener noreferrer\" target=\"_blank\">Andrew Kliatskyi</a> on Unsplash.</p>"
 		},
 		{
@@ -216,6 +218,62 @@
 			"password": "password"
 		}
 	],
+	"forms": [
+		{
+			"$type": "Form",
+			"id": 1,
+			"title": "Contact Form",
+			"fields": [
+				{
+					"$type": "Field.Text",
+					"name": "full-name",
+					"label": "Full Name",
+					"width": 100,
+					"defaultValue": null,
+					"required": true
+				},
+				{
+					"$type": "Field.Email",
+					"name": "email",
+					"label": "Email",
+					"width": 100,
+					"defaultValue": null,
+					"required": true
+				},
+				{
+					"$type": "Field.Number",
+					"name": "phone",
+					"label": "Phone",
+					"width": 100,
+					"defaultValue": null,
+					"required": false
+				},
+				{
+					"$type": "Field.TextArea",
+					"name": "message",
+					"label": "Message",
+					"width": 100,
+					"defaultValue": null,
+					"required": true
+				}
+			],
+			"submitButtonLabel": "Submit",
+			"confirmationType": "MESSAGE",
+			"confirmationMessage": "<h2>The contact form has been submitted successfully.</h2>",
+			"emails": [
+				{
+					"$type": "Email",
+					"emailTo": "{{email}}",
+					"cc": "",
+					"bcc": "",
+					"replyTo": "",
+					"emailFrom": "\"Janilla\" <demo@cms.janilla.com>",
+					"subject": "You've received a new message.",
+					"message": "<p>Your contact form submission was successfully received.</p>"
+				}
+			]
+		}
+	],
 	"header": {
 		"$type": "Header",
 		"id": 1,
@@ -224,13 +282,37 @@
 				"$type": "Link",
 				"url": "/posts",
 				"label": "Posts",
-				"appearance": ""
+				"appearance": null
 			},
 			{
 				"$type": "Link",
 				"url": "/contact",
 				"label": "Contact",
-				"appearance": ""
+				"appearance": null
+			}
+		]
+	},
+	"footer": {
+		"$type": "Footer",
+		"id": 1,
+		"navItems": [
+			{
+				"$type": "Link",
+				"url": "/admin",
+				"label": "Admin",
+				"appearance": null
+			},
+			{
+				"$type": "Link",
+				"url": "https://github.com/diego-schivo/janilla-cms",
+				"label": "Source Code",
+				"appearance": null
+			},
+			{
+				"$type": "Link",
+				"url": "https://janilla.com/",
+				"label": "Janilla",
+				"appearance": null
 			}
 		]
 	}

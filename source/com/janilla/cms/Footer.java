@@ -23,40 +23,10 @@
  */
 package com.janilla.cms;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.List;
 
-import com.janilla.persistence.ApplicationPersistenceBuilder;
-import com.janilla.persistence.Persistence;
-import com.janilla.reflect.Factory;
+import com.janilla.persistence.Store;
 
-public class CustomPersistenceBuilder extends ApplicationPersistenceBuilder {
-
-	public CustomPersistenceBuilder(Path databaseFile, Factory factory) {
-		super(databaseFile, factory);
-	}
-
-	@Override
-	public Persistence build() {
-		var fe = Files.exists(databaseFile);
-		var p = super.build();
-		if (!fe) {
-			var sd = SeedData.INSTANCE;
-			for (var x : sd.pages())
-				p.crud(Page.class).create(x);
-			for (var x : sd.posts())
-				p.crud(Post.class).create(x);
-			for (var x : sd.media())
-				p.crud(Media.class).create(x);
-			for (var x : sd.categories())
-				p.crud(Category.class).create(x);
-			for (var x : sd.users())
-				p.crud(User.class).create(x);
-			for (var x : sd.forms())
-				p.crud(Form.class).create(x);
-			p.crud(Header.class).create(sd.header());
-			p.crud(Footer.class).create(sd.footer());
-		}
-		return p;
-	}
+@Store
+public record Footer(Long id, List<Link> navItems) {
 }

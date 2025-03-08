@@ -21,26 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { UpdatableHTMLElement } from "./updatable-html-element.js";
+package com.janilla.cms;
 
-export default class Form extends UpdatableHTMLElement {
-
-	static get templateName() {
-		return "form";
-	}
-
-	constructor() {
-		super();
-	}
-
-	async updateDisplay() {
-		const d = this.closest("page-element").data(this.dataset.path);
-		this.appendChild(this.interpolateDom({
-			$template: "",
-			intro: d.enableIntro ? {
-				$template: "intro",
-				...d
-			} : null
-		}));
-	}
+public record FormBlock(Boolean enableIntro, String introContent) {
 }

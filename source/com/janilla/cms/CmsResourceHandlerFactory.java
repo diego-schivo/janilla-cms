@@ -34,6 +34,7 @@ import com.janilla.http.HeaderField;
 import com.janilla.http.HttpExchange;
 import com.janilla.http.HttpHandler;
 import com.janilla.http.HttpRequest;
+import com.janilla.http.HttpResponse;
 import com.janilla.http.HttpWritableByteChannel;
 import com.janilla.web.WebHandlerFactory;
 
@@ -53,16 +54,15 @@ public class CmsResourceHandlerFactory implements WebHandlerFactory {
 			ud = System.getProperty("user.home") + ud.substring(1);
 		var f = Path.of(ud).resolve(n);
 		return Files.exists(f) ? ex -> {
-			handle(f, (HttpExchange) ex);
+			handle(f, ex.getResponse());
 			return true;
 		} : null;
 	}
 
-	protected void handle(Path file, HttpExchange exchange) {
-		var rs = exchange.getResponse();
-		rs.setStatus(200);
+	protected static void handle(Path file, HttpResponse response) {
+		response.setStatus(200);
 
-		var hh = rs.getHeaders();
+		var hh = response.getHeaders();
 		hh.add(new HeaderField("cache-control", "max-age=3600"));
 		var n = file.getFileName().toString();
 		switch (n.substring(n.lastIndexOf('.') + 1)) {
@@ -80,7 +80,7 @@ public class CmsResourceHandlerFactory implements WebHandlerFactory {
 		}
 
 		try (var is = Files.newInputStream(file)) {
-			((HttpWritableByteChannel) rs.getBody()).write(ByteBuffer.wrap(is.readAllBytes()), true);
+			((HttpWritableByteChannel) response.getBody()).write(ByteBuffer.wrap(is.readAllBytes()), true);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}

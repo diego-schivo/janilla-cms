@@ -1,8 +1,11 @@
+<template id="admin">
+  <admin-panel data-path="${path}"></admin-panel>
+</template>
 <!--${header}-->
 <template id="header">
-  <header class="header">
+  <header>
     <a href="/">
-      <img src="/images/payload-logo-light.svg" loading="lazy" />
+      <img src="/images/janilla-logo-light.svg" loading="lazy" />
     </a>
     <nav>
       <!--${navItems}-->
@@ -13,7 +16,7 @@
     </nav>
   </header>
 </template>
-<template id="header-link">
+<template id="link">
   <a href="${url}">${label}</a>
 </template>
 <!--${content}-->
@@ -26,24 +29,22 @@
 <template id="post">
   <post-element></post-element>
 </template>
-<footer class="footer">
-  <a href="/">
-    <img src="/images/payload-logo-light.svg" loading="lazy" />
-  </a>
-  <nav>
-    <a href="/">Admin</a>
-    <a href="/">Source Code</a>
-    <a href="/">Payload</a>
-  </nav>
-  <div>
-    <select>
-      <option value="auto">Auto</option>
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-    </select>
-    <lucide-icon data-name="chevron-down"></lucide-icon>
-  </div>
-</footer>
-<template id="admin">
-  <admin-panel data-path="${path}"></admin-panel>
+<!--${footer}-->
+<template id="footer">
+  <footer>
+    <a href="/">
+      <img src="/images/payload-logo-light.svg" loading="lazy" />
+    </a>
+    <nav>
+      <!--${navItems}-->
+    </nav>
+    <div>
+      <select>
+        <option value="auto">Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+      <lucide-icon data-name="chevron-down"></lucide-icon>
+    </div>
+  </footer>
 </template>

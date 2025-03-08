@@ -39,50 +39,69 @@ export default class ReferenceControl extends UpdatableHTMLElement {
 
 	connectedCallback() {
 		super.connectedCallback();
-		this.addEventListener("change", this.handleChange);
 		this.addEventListener("click", this.handleClick);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		this.removeEventListener("change", this.handleChange);
 		this.removeEventListener("click", this.handleClick);
 	}
 
-	handleChange = event => {
-		event.stopPropagation();
-		event.target.closest("dialog").close();
-		const s = this.state;
-		s.field.data.id = parseInt(event.target.value);
-		this.requestUpdate();
-	}
-
 	handleClick = async event => {
-		if (!event.target.matches('[type="button"]'))
-			return;
-		event.stopPropagation();
 		const s = this.state;
-		s.media = await (await fetch("/api/media")).json();
-		await this.updateDisplay();
-		this.querySelector("dialog").showModal();
+		const b = event.target.closest("button");
+		if (b) {
+			event.stopPropagation();
+			switch (b.name) {
+				case "choose":
+					s.dialog = true;
+					await this.updateDisplay();
+					this.querySelector("dialog").showModal();
+					break;
+				case "close":
+					b.closest("dialog").close();
+					s.dialog = false;
+					break;
+			}
+		}
+		const a = event.target.closest("a");
+		if (a) {
+			event.preventDefault();
+			const id = parseInt(a.getAttribute("href").split("/").at(-1));
+			for (const x of Object.getOwnPropertyNames(s.field.data))
+				delete s.field.data[x];
+			if (s.dialog) {
+				const cl = this.querySelector("dialog collection-list");
+				Object.assign(s.field.data, cl.state.data.find(x => x.id === id));
+				cl.closest("dialog").close();
+				s.dialog = false;
+			}
+			this.requestUpdate();
+		}
 	}
 
 	async updateDisplay() {
+		const ap = this.closest("admin-panel");
 		const p = this.dataset.path;
 		const s = this.state;
-		s.field = (() => {
-			const af = this.closest("admin-panel");
-			return af.field(p);
-		})();
+		s.field ??= ap.field(p);
+		const cc = ap.state.schema["Collections"];
+		const cn = Object.entries(cc).find(([_, v]) => v.elementTypes[0] === this.dataset.type)[0];
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			label: p.substring(p.lastIndexOf(".") + 1),
+			...this.dataset,
 			name: p,
-			value: s.field.data,
-			media: s.media?.map(x => ({
-				$template: "media",
-				...x
-			}))
+			collection: cn,
+			ids: s.field.data.id ? [s.field.data.id] : [],
+			input: s.field.data.id ? {
+				$template: "input",
+				name: p,
+				value: s.field.data.id
+			} : null,
+			dialog: s.dialog ? {
+				$template: "dialog",
+				collection: cn
+			} : null
 		}));
 	}
 }

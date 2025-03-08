@@ -127,7 +127,7 @@ export default class AdminPanel extends UpdatableHTMLElement {
 			} else if (nn.length === 2 && nn[0] === "globals") {
 				s.t0 = s.schema["Globals"][nn[1]].type;
 				s.data = await (await fetch(`/api/${nn[1]}`)).json();
-			} else if (nn.length === 0) {
+			}/* else if (nn.length === 0) {
 				s.t0 = Object.keys(s.schema)[0];
 				s.data = JSON.parse(localStorage.getItem("data")) ?? {
 					collections: {
@@ -137,7 +137,7 @@ export default class AdminPanel extends UpdatableHTMLElement {
 						header: { $type: "Header" }
 					}
 				};
-			}
+			}*/
 		}
 		this.appendChild(this.interpolateDom({
 			$template: "",
@@ -158,7 +158,7 @@ export default class AdminPanel extends UpdatableHTMLElement {
 							if (nn[2])
 								xx.push({
 									href: `/admin/collections/${nn[1]}/${nn[2]}`,
-									text: this.title(s.data)
+									text: this.title(s.data) ?? s.data.id
 								});
 							break;
 						case "globals":
@@ -179,20 +179,30 @@ export default class AdminPanel extends UpdatableHTMLElement {
 					} : x.text
 				}))
 			} : null,
-			content: {
-				$template: (() => {
-					switch (nn[0]) {
-						case "login":
-							return "login";
-						case "collections":
-							return nn.length === 2 ? "collection" : "object";
-						case "globals":
-							return "object";
-						default:
-							return "dashboard";
-					}
-				})()
-			},
+			content: (() => {
+				switch (nn[0]) {
+					case "login":
+						return { $template: "login" };
+					case "collections":
+						return nn.length === 2 ? {
+							$template: "collection",
+							name: nn[1]
+						} : {
+							$template: "object",
+							preview: (() => {
+								const h = this.preview(s.data);
+								return h ? {
+									$template: "preview",
+									href: h
+								} : null;
+							})()
+						};
+					case "globals":
+						return { $template: "object" };
+					default:
+						return { $template: "dashboard" };
+				}
+			})(),
 			dialog: s.me ? {
 				$template: "dialog",
 				groups: Object.entries(s.schema["Data"]).map(([k, v]) => ({
@@ -236,6 +246,7 @@ export default class AdminPanel extends UpdatableHTMLElement {
 						name: n,
 						...p,
 						properties: p.type !== "List" && p.type !== "String" ? s.schema[p.type] : null,
+						/*
 						data: f.data[n] ??= (() => {
 							switch (p.type) {
 								case "Boolean":
@@ -248,6 +259,8 @@ export default class AdminPanel extends UpdatableHTMLElement {
 									return {};
 							}
 						})()
+						*/
+						data: f.data[n]
 					};
 				}
 		return f;
@@ -265,6 +278,8 @@ export default class AdminPanel extends UpdatableHTMLElement {
 
 	title(entity) {
 		switch (entity.$type) {
+			case "Media":
+				return entity.file?.name;
 			case "User":
 				return entity.name;
 			default:
@@ -274,6 +289,8 @@ export default class AdminPanel extends UpdatableHTMLElement {
 
 	headers(entitySlug) {
 		switch (entitySlug) {
+			case "media":
+				return ["file", "alt"];
 			case "users":
 				return ["name", "email"];
 			default:
@@ -288,16 +305,19 @@ export default class AdminPanel extends UpdatableHTMLElement {
 			case "File":
 				return "file-control";
 			case "Instant":
+			case "Integer":
 				return "text-control";
 			case "String":
 				switch (field.name) {
+					case "confirmationMessage":
+					case "message":
 					case "richText":
 						return "rich-text-control";
 					case "type":
 					case "appearance":
 						return "select-control";
 					default:
-						return "text-control";
+						return field.options ? "radio-group-control" : "text-control";
 				}
 			case "List":
 				return field.referenceType ? "reference-list-control" : "list-control";
@@ -308,14 +328,14 @@ export default class AdminPanel extends UpdatableHTMLElement {
 		}
 	}
 
-	selectOptions(field) {
+	options(field) {
 		switch (field.name) {
 			case "type":
 				return ["none", "highImpact", "mediumImpact", "lowImpact"];
 			case "appearance":
 				return ["default", "outline"];
 		}
-		return [];
+		return field.options ?? [];
 	}
 
 	tabs(type) {
@@ -331,6 +351,17 @@ export default class AdminPanel extends UpdatableHTMLElement {
 					meta: ["relatedPosts", "categories"],
 					seo: ["meta"]
 				};
+			default:
+				return null;
+		}
+	}
+
+	preview(entity) {
+		switch (entity.$type) {
+			case "Page":
+				return `/${entity.slug}`;
+			case "Post":
+				return `/posts/${entity.slug}`;
 			default:
 				return null;
 		}

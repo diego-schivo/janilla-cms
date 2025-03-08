@@ -1,31 +1,18 @@
 reference-list-control {
-  li {
-    align-items: center;
-    display: flex;
-    font-size: 12px;
-    justify-content: space-between;
-    line-height: 22px;
-  }
+  dialog {
+    position: relative;
 
-  dialog[open] {
-    &,
-    > div {
-      display: flex;
-      flex-direction: column;
-    }
+    > button[name="close"] {
+      background: transparent;
+      border: none;
+      margin-left: auto;
+      padding: 0;
+      position: absolute;
+      right: 1rem;
 
-    & {
-      gap: 1rem;
-    }
-
-	> header {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    > div {
-      gap: 0.5rem;
+      lucide-icon {
+        width: 2rem;
+      }
     }
   }
 }

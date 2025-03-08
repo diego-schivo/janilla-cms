@@ -26,7 +26,7 @@ package com.janilla.cms;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/posts")
-public class PostApi extends CrudApi<Post> {
+public class PostApi extends CollectionApi<Post> {
 
 	public PostApi() {
 		super(Post.class);

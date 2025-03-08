@@ -26,19 +26,9 @@ package com.janilla.cms;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/header")
-public class HeaderApi extends CrudApi<Header> {
+public class HeaderApi extends GlobalApi<Header> {
 
 	public HeaderApi() {
 		super(Header.class);
-	}
-
-	@Handle(method = "GET")
-	public Header read() {
-		return super.read(1);
-	}
-
-	@Handle(method = "PUT")
-	public Header update(Header header) {
-		return super.update(1, header);
 	}
 }

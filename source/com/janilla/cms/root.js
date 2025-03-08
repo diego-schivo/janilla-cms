@@ -46,7 +46,7 @@ export default class Root extends UpdatableHTMLElement {
 
 	handleClick = event => {
 		const a = event.target.closest("a");
-		if (!a?.href)
+		if (!a?.href || event.defaultPrevented || a.target)
 			return;
 		event.preventDefault();
 		const u = new URL(a.href);
@@ -68,7 +68,7 @@ export default class Root extends UpdatableHTMLElement {
 			header: {
 				$template: "header",
 				navItems: (await (await fetch("/api/header")).json()).navItems?.map(x => ({
-					$template: "header-link",
+					$template: "link",
 					...x
 				}))
 			},
@@ -77,6 +77,13 @@ export default class Root extends UpdatableHTMLElement {
 					const m2 = location.pathname.match(/^\/posts(\/.*)?$/);
 					return m2 ? (m2[1] ? "post" : "posts") : "page";
 				})()
+			},
+			footer: {
+				$template: "footer",
+				navItems: (await (await fetch("/api/footer")).json()).navItems?.map(x => ({
+					$template: "link",
+					...x
+				}))
 			}
 		}));
 	}

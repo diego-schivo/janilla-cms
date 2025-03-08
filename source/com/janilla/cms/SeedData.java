@@ -32,7 +32,7 @@ import com.janilla.json.Converter;
 import com.janilla.json.Json;
 
 public record SeedData(List<Page> pages, List<Post> posts, List<Media> media, List<Category> categories,
-		List<User> users, Header header) {
+		List<User> users, List<Form> forms, Header header, Footer footer) {
 
 	public static SeedData INSTANCE;
 

@@ -23,14 +23,14 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class FileField extends UpdatableHTMLElement {
+export default class RadioGroupControl extends UpdatableHTMLElement {
 
 	static get observedAttributes() {
 		return ["data-key", "data-path"];
 	}
 
 	static get templateName() {
-		return "file-field";
+		return "radio-group-control";
 	}
 
 	constructor() {
@@ -38,14 +38,18 @@ export default class FileField extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const af = this.closest("admin-panel");
+		const ap = this.closest("admin-panel");
 		const p = this.dataset.path;
-		const f = af.field(p);
+		const f = ap.field(p);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			label: p.substring(p.lastIndexOf(".") + 1),
-			name: p,
-			value: f.data
+			options: ap.options(f).map(x => ({
+				$template: "option",
+				name: p,
+				value: x,
+				checked: x == f.data,
+				text: x
+			}))
 		}));
 	}
 }

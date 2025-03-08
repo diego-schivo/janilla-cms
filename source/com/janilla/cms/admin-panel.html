@@ -37,13 +37,22 @@
   <login-element></login-element>
 </template>
 <template id="collection">
-  <collection-list data-path="${path}"></collection-list>
+  <collection-list data-name="${name}"></collection-list>
 </template>
 <template id="object">
   <form autocomplete="off">
-    <object-control data-path="${path}"></object-control>
-    <button>save</button>
+    <div>
+      <!--${preview}-->
+      <button>save</button>
+    </div>
+    <object-control></object-control>
   </form>
+</template>
+<template id="preview">
+  <a href="${href}" target="_blank">
+    <lucide-icon data-name="link-2"></lucide-icon>
+    preview
+  </a>
 </template>
 <!--${dialog}-->
 <template id="dialog">

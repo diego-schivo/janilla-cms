@@ -24,7 +24,6 @@
 package com.janilla.cms;
 
 import java.util.Set;
-import java.util.stream.Stream;
 
 import com.janilla.persistence.Crud;
 import com.janilla.persistence.Persistence;
@@ -33,48 +32,30 @@ import com.janilla.web.Bind;
 import com.janilla.web.Handle;
 import com.janilla.web.NotFoundException;
 
-public abstract class CrudApi<E> {
+public abstract class GlobalApi<E> {
 
 	protected final Class<E> type;
 
 	public Persistence persistence;
 
-	protected CrudApi(Class<E> type) {
+	protected GlobalApi(Class<E> type) {
 		this.type = type;
 	}
 
-	@Handle(method = "POST")
-	public E create(@Bind(resolver = SeedData.TypeResolver.class) E entity) {
-		return crud().create(entity);
-	}
-
 	@Handle(method = "GET")
-	public Stream<E> read(@Bind("slug") String slug) {
-		return crud().read(slug != null && !slug.isBlank() ? crud().filter("slug", slug) : crud().list());
+	public E read() {
+		var e = crud().read(1);
+		if (e == null)
+			throw new NotFoundException("entity " + 1);
+		return e;
 	}
 
-	@Handle(method = "GET", path = "(\\d+)")
-	public E read(long id) {
-		var p = crud().read(id);
-		if (p == null)
-			throw new NotFoundException("entity " + id);
-		return p;
-	}
-
-	@Handle(method = "PUT", path = "(\\d+)")
-	public E update(long id, @Bind(resolver = SeedData.TypeResolver.class) E entity) {
-		var p = crud().update(id, x -> Reflection.copy(entity, x, y -> !Set.of("id").contains(y)));
-		if (p == null)
-			throw new NotFoundException("entity " + id);
-		return p;
-	}
-
-	@Handle(method = "DELETE", path = "(\\d+)")
-	public E delete(long id) {
-		var p = crud().delete(id);
-		if (p == null)
-			throw new NotFoundException("entity " + id);
-		return p;
+	@Handle(method = "PUT")
+	public E update(@Bind(resolver = SeedData.TypeResolver.class) E entity) {
+		var e = crud().update(1, x -> Reflection.copy(entity, x, y -> !Set.of("id").contains(y)));
+		if (e == null)
+			throw new NotFoundException("entity " + 1);
+		return e;
 	}
 
 	protected Crud<E> crud() {

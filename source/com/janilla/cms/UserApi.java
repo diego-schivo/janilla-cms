@@ -30,7 +30,7 @@ import com.janilla.json.Jwt;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/users")
-public class UserApi extends CrudApi<User> {
+public class UserApi extends CollectionApi<User> {
 
 	public UserApi() {
 		super(User.class);

@@ -1,18 +1,32 @@
 hero-component {
   article,
+  section,
   ul {
     display: flex;
+  }
+
+  article,
+  section {
+    flex-direction: column;
+  }
+
+  article,
+  ul {
     gap: 1rem;
   }
 
   article {
-    flex-direction: column;
     background: no-repeat top center / 1280px 80vh;
     justify-content: center;
     margin-top: -6.5rem;
     min-height: 80vh;
     padding: 1rem;
     position: relative;
+  }
+
+  section {
+    gap: 1.5rem;
+	transform: translateY(-2rem);
   }
 
   h1 {
@@ -32,9 +46,13 @@ hero-component {
     a {
       border: 1px solid rgba(38, 38, 38, 0.8);
       border-radius: 0.25rem;
+      box-sizing: border-box;
+      display: inline-block;
       font-size: 0.875rem;
+      height: 2.5rem;
       line-height: 1.25rem;
       padding: 0.5rem 1rem;
+      text-decoration: none;
 
       &.default {
         background: rgb(248, 250, 252);

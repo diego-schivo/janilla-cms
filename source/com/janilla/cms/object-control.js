@@ -46,11 +46,14 @@ export default class ObjectControl extends UpdatableHTMLElement {
 			...this.dataset,
 			...f,
 			items: (() => {
-				const ff = Object.entries(f.properties).filter(([k, _]) => k !== "id").map(([k, v]) => {
+				const pp = Object.entries(f.properties).filter(([k, _]) => k !== "id");
+				const ff = pp.map(([k, v]) => {
 					const ct = ap.controlTemplate(ap.field(k, f));
 					const p2 = p ? `${p}.${k}` : k;
 					return {
-						$template: ["reference-control", "select-control", "text-control", "textarea-control"].includes(ct) ? "label" : "div",
+						$template: ["select-control", "text-control", "textarea-control"].includes(ct) ? "label-nest-field"
+							: ["checkbox-control"].includes(ct) ? "no-label-field"
+								: "label-field",
 						label: ap.label(p2),
 						name: k,
 						control: {
@@ -64,7 +67,7 @@ export default class ObjectControl extends UpdatableHTMLElement {
 				const nn = ap.tabs(f.type);
 				let ii;
 				if (nn) {
-					const kk = Object.keys(f.properties);
+					const kk = pp.map(([k, _]) => k);
 					ii = Object.fromEntries(Object.values(nn).flatMap(x => x.map(y => [y, kk.indexOf(y)])).filter((_, i) => i !== -1));
 				}
 				const jj = (nn ? ff.filter(x => !Object.hasOwn(ii, x.name)) : ff).map(x => ({

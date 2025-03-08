@@ -17,4 +17,10 @@ collection-list {
   th {
     color: rgb(141, 141, 141);
   }
+
+  a {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+  }
 }

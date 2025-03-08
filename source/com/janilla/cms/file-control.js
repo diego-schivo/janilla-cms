@@ -21,42 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.cms;
+import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+export default class FileControl extends UpdatableHTMLElement {
 
-import com.janilla.persistence.ApplicationPersistenceBuilder;
-import com.janilla.persistence.Persistence;
-import com.janilla.reflect.Factory;
-
-public class CustomPersistenceBuilder extends ApplicationPersistenceBuilder {
-
-	public CustomPersistenceBuilder(Path databaseFile, Factory factory) {
-		super(databaseFile, factory);
+	static get observedAttributes() {
+		return ["data-key", "data-path"];
 	}
 
-	@Override
-	public Persistence build() {
-		var fe = Files.exists(databaseFile);
-		var p = super.build();
-		if (!fe) {
-			var sd = SeedData.INSTANCE;
-			for (var x : sd.pages())
-				p.crud(Page.class).create(x);
-			for (var x : sd.posts())
-				p.crud(Post.class).create(x);
-			for (var x : sd.media())
-				p.crud(Media.class).create(x);
-			for (var x : sd.categories())
-				p.crud(Category.class).create(x);
-			for (var x : sd.users())
-				p.crud(User.class).create(x);
-			for (var x : sd.forms())
-				p.crud(Form.class).create(x);
-			p.crud(Header.class).create(sd.header());
-			p.crud(Footer.class).create(sd.footer());
-		}
-		return p;
+	static get templateName() {
+		return "file-control";
+	}
+
+	constructor() {
+		super();
+	}
+
+	async updateDisplay() {
+		const af = this.closest("admin-panel");
+		const p = this.dataset.path;
+		const f = af.field(p);
+		this.appendChild(this.interpolateDom({
+			$template: f.data?.name ? "non-null" : "null",
+			label: p.substring(p.lastIndexOf(".") + 1),
+			name: p,
+			data: f.data
+		}));
 	}
 }

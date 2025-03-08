@@ -26,7 +26,7 @@ package com.janilla.cms;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/pages")
-public class PageApi extends CrudApi<Page> {
+public class PageApi extends CollectionApi<Page> {
 
 	public PageApi() {
 		super(Page.class);
