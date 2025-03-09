@@ -11,6 +11,7 @@
 @import "media-block.css";
 @import "page.css";
 @import "post.css";
-@import "post-list.css";
+@import "posts.css";
 @import "related-posts.css";
 @import "root.css";
+@import "search.css";

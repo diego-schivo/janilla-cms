@@ -52,8 +52,15 @@ public class CustomJsonHandlerFactory extends JsonHandlerFactory {
 			var o = stack().peek();
 			if (o instanceof Map.Entry<?, ?> e) {
 				var n = (String) e.getKey();
-				if (n.equals("media") && object instanceof Long l)
-					object = persistence.crud(Media.class).read(l);
+				if (object instanceof Long l)
+					switch (n) {
+					case "form":
+						object = persistence.crud(Form.class).read(l);
+						break;
+					case "media":
+						object = persistence.crud(Media.class).read(l);
+						break;
+					}
 				switch (n) {
 				case "media":
 					break;

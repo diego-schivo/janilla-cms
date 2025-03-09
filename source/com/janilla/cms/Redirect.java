@@ -23,5 +23,9 @@
  */
 package com.janilla.cms;
 
-public record FormBlock(@Types(Form.class) Long form, Boolean enableIntro, String introContent) {
+import com.janilla.persistence.Index;
+import com.janilla.persistence.Store;
+
+@Store
+public record Redirect(Long id, @Index String from, String to) {
 }

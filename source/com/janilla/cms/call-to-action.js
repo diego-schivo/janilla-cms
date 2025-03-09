@@ -37,7 +37,11 @@ export default class CallToAction extends UpdatableHTMLElement {
 		const d = this.closest("page-element").data(this.dataset.path);
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			...d
+			...d,
+			links: d.links.map(x => ({
+				$template: "link",
+				...x
+			}))
 		}));
 	}
 }

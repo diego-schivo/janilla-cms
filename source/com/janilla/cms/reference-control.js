@@ -93,11 +93,11 @@ export default class ReferenceControl extends UpdatableHTMLElement {
 			name: p,
 			collection: cn,
 			ids: s.field.data.id ? [s.field.data.id] : [],
-			input: s.field.data.id ? {
+			input: {
 				$template: "input",
 				name: p,
 				value: s.field.data.id
-			} : null,
+			},
 			dialog: s.dialog ? {
 				$template: "dialog",
 				collection: cn

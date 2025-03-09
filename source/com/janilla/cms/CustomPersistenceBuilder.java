@@ -52,8 +52,12 @@ public class CustomPersistenceBuilder extends ApplicationPersistenceBuilder {
 				p.crud(Category.class).create(x);
 			for (var x : sd.users())
 				p.crud(User.class).create(x);
+			for (var x : sd.redirects())
+				p.crud(Redirect.class).create(x);
 			for (var x : sd.forms())
 				p.crud(Form.class).create(x);
+			for (var x : sd.formSubmissions())
+				p.crud(FormSubmission.class).create(x);
 			p.crud(Header.class).create(sd.header());
 			p.crud(Footer.class).create(sd.footer());
 		}

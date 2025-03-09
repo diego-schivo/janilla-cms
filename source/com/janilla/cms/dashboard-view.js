@@ -47,7 +47,7 @@ export default class DashboardView extends UpdatableHTMLElement {
 		const b = event.target.closest("button");
 		if (!b)
 			return;
-			event.stopPropagation();
+		event.stopPropagation();
 		const a = b.previousElementSibling;
 		const t = a.getAttribute("href").split("/").at(-1);
 		const e = await (await fetch(`/api/${t}`, {
@@ -66,12 +66,15 @@ export default class DashboardView extends UpdatableHTMLElement {
 			items: Object.entries(s.schema["Data"]).map(([k, v]) => ({
 				$template: "group",
 				name: k,
-				items: Object.keys(s.schema[v.type]).map(x => ({
-					$template: "card",
-					href: `/admin/${k}/${x}`,
-					name: x,
-					button: k === "collections" ? { $template: "button" } : null
-				}))
+				items: Object.keys(s.schema[v.type]).map(x => {
+					const nn = x.split(/(?=[A-Z])/).map(x => x.toLowerCase());
+					return {
+						$template: "card",
+						href: `/admin/${k}/${nn.join("-")}`,
+						name: nn.join(" "),
+						button: k === "collections" ? { $template: "button" } : null
+					};
+				})
 			}))
 		}));
 	}

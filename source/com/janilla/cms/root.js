@@ -59,10 +59,19 @@ export default class Root extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
+		for (const r of await (await fetch("/api/redirects")).json())
+			if (r.from === location.pathname) {
+				history.pushState(undefined, "", r.to);
+				dispatchEvent(new CustomEvent("popstate"));
+				return;
+			}
 		const m = location.pathname.match(/^\/admin(\/.*)?$/);
 		this.appendChild(this.interpolateDom(m ? {
 			$template: "admin",
-			path: m[1]?.substring(1)?.replaceAll("/", ".")
+			path: (() => {
+				const s = m[1]?.substring(1);
+				return s ? s.split("/").map(x => x.split("-").map((y, i) => i ? y.charAt(0).toUpperCase() + y.substring(1) : y).join("")).join(".") : null;
+			})()
 		} : {
 			$template: "",
 			header: {
@@ -72,12 +81,18 @@ export default class Root extends UpdatableHTMLElement {
 					...x
 				}))
 			},
-			content: {
-				$template: (() => {
-					const m2 = location.pathname.match(/^\/posts(\/.*)?$/);
-					return m2 ? (m2[1] ? "post" : "posts") : "page";
-				})()
-			},
+			content: (() => {
+				const m2 = location.pathname.match(/^\/posts(\/.*)?$/);
+				if (m2)
+					return { $template: m2[1] ? "post" : "posts" };
+				return location.pathname === "/search" ? {
+					$template: "search",
+					query: new URLSearchParams(location.search).get("query")
+				} : {
+					$template: "page",
+					slug: location.pathname.substring(1) ?? "home"
+				};
+			})(),
 			footer: {
 				$template: "footer",
 				navItems: (await (await fetch("/api/footer")).json()).navItems?.map(x => ({

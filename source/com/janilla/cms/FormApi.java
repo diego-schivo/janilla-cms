@@ -23,6 +23,8 @@
  */
 package com.janilla.cms;
 
+import java.util.stream.Stream;
+
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/forms")
@@ -30,5 +32,10 @@ public class FormApi extends CollectionApi<Form> {
 
 	public FormApi() {
 		super(Form.class);
+	}
+
+	@Handle(method = "GET")
+	public Stream<Form> read() {
+		return crud().read(crud().list());
 	}
 }

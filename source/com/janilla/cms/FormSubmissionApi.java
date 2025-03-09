@@ -23,5 +23,19 @@
  */
 package com.janilla.cms;
 
-public record FormBlock(@Types(Form.class) Long form, Boolean enableIntro, String introContent) {
+import java.util.stream.Stream;
+
+import com.janilla.web.Handle;
+
+@Handle(path = "/api/form-submissions")
+public class FormSubmissionApi extends CollectionApi<FormSubmission> {
+
+	public FormSubmissionApi() {
+		super(FormSubmission.class);
+	}
+
+	@Handle(method = "GET")
+	public Stream<FormSubmission> read() {
+		return crud().read(crud().list());
+	}
 }

@@ -18,7 +18,7 @@ hero-component {
   article {
     background: no-repeat top center / 1280px 80vh;
     justify-content: center;
-    margin-top: -6.5rem;
+    margin: -13.5rem -1rem -2.5rem;
     min-height: 80vh;
     padding: 1rem;
     position: relative;

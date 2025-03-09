@@ -9,7 +9,7 @@
     </a>
     <nav>
       <!--${navItems}-->
-      <a href="/">
+      <a href="/search">
         <span class="sr-only">Search</span>
         <lucide-icon data-name="search"></lucide-icon>
       </a>
@@ -21,19 +21,22 @@
 </template>
 <!--${content}-->
 <template id="page">
-  <page-element></page-element>
+  <page-element data-slug="${slug}"></page-element>
 </template>
 <template id="posts">
-  <post-list></post-list>
+  <posts-element></posts-element>
 </template>
 <template id="post">
   <post-element></post-element>
+</template>
+<template id="search">
+  <search-element data-query="${query}"></search-element>
 </template>
 <!--${footer}-->
 <template id="footer">
   <footer>
     <a href="/">
-      <img src="/images/payload-logo-light.svg" loading="lazy" />
+      <img src="/images/janilla-logo-light.svg" loading="lazy" />
     </a>
     <nav>
       <!--${navItems}-->

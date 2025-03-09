@@ -23,21 +23,49 @@
  */
 import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-export default class PostList extends UpdatableHTMLElement {
+export default class Search extends UpdatableHTMLElement {
+
+	static get observedAttributes() {
+		return ["data-query"];
+	}
 
 	static get templateName() {
-		return "post-list";
+		return "search";
 	}
 
 	constructor() {
 		super();
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		this.addEventListener("input", this.handleInput);
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.removeEventListener("input", this.handleInput);
+	}
+
+	handleInput = async event => {
+		const el = event.target.closest("input");
+		if (el?.name !== "query")
+			return;
+		event.stopPropagation();
+		const u = new URL(location.pathname, location.href);
+		u.searchParams.append("query", el.value);
+		history.pushState(undefined, "", u.pathname + u.search);
+		dispatchEvent(new CustomEvent("popstate"));
+	}
+
 	async updateDisplay() {
-		const pp = await (await fetch("/api/posts")).json();
+		const u = new URL("/api/posts", location.href);
+		const q = new URLSearchParams(location.search).get("query");
+		if (q)
+			u.searchParams.append("query", q);
+		const pp = await (await fetch(u)).json();
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			total: pp.length,
 			articles: pp.map(x => ({
 				$template: "article",
 				...x

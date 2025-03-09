@@ -25,6 +25,10 @@ import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
 export default class Page extends UpdatableHTMLElement {
 
+	static get observedAttributes() {
+		return ["data-slug"];
+	}
+
 	static get templateName() {
 		return "page";
 	}
@@ -34,9 +38,10 @@ export default class Page extends UpdatableHTMLElement {
 	}
 
 	async updateDisplay() {
-		const n = location.pathname.split("/")[1] || "home";
+		const u = new URL("/api/pages", location.href);
+		u.searchParams.append("slug", this.dataset.slug);
 		const s = this.state;
-		s.page = (await (await fetch(`/api/pages?slug=${encodeURIComponent(n)}`)).json())[0];
+		s.page = (await (await fetch(u)).json())[0];
 		this.appendChild(this.interpolateDom({
 			$template: "",
 			hero: s.page.hero.type === "none" ? null : {

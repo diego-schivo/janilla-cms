@@ -1,17 +1,18 @@
 <article>
-  <h3>Recent posts</h3>
-  <p>
-    The posts below are displayed in an "Archive" layout building block which is an extremely powerful way to display documents on a page.
-    It can be auto-populated by collection or by category, or posts can be individually selected.
-    Pagination controls will automatically appear if the number of results exceeds the number of items per page.
-  </p>
-  <!--${articles}-->
+  <section>
+    <!--${introContent}-->
+  </section>
+  <section>
+    <!--${articles}-->
+  </section>
   <template id="article">
     <article>
       <a href="/posts/${slug}">
         <img src="${meta.image}" loading="lazy" />
-        <h3>${meta.title}</h3>
-        <p>${meta.description}</p>
+        <div>
+          <h3>${meta.title}</h3>
+          <p>${meta.description}</p>
+        </div>
       </a>
     </article>
   </template>

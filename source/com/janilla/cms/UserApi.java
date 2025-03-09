@@ -25,6 +25,7 @@ package com.janilla.cms;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import com.janilla.json.Jwt;
 import com.janilla.web.Handle;
@@ -32,11 +33,16 @@ import com.janilla.web.Handle;
 @Handle(path = "/api/users")
 public class UserApi extends CollectionApi<User> {
 
+	public Properties configuration;
+
 	public UserApi() {
 		super(User.class);
 	}
 
-	public Properties configuration;
+	@Handle(method = "GET")
+	public Stream<User> read() {
+		return crud().read(crud().list());
+	}
 
 	@Handle(method = "POST", path = "login")
 	public User login(User user, CustomHttpExchange exchange) {

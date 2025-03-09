@@ -1,8 +1,20 @@
 body:not(:has(admin-panel)) {
+  background: rgb(0, 0, 0);
   font-family: Geist;
 }
 
 root-element {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+
+  > header,
+  > footer {
+    a {
+      text-decoration: none;
+    }
+  }
+
   > header {
     align-items: center;
     display: flex;
@@ -15,7 +27,6 @@ root-element {
       font-size: 0.875rem;
       font-weight: 500;
       line-height: 1.25rem;
-      text-decoration: none;
     }
 
     img {
@@ -35,6 +46,7 @@ root-element {
 
   > footer {
     border-top: 1px solid rgba(38, 38, 38, 0.8);
+    margin-top: 2rem;
     padding: 2rem 1rem;
 
     &,

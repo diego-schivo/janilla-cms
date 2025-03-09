@@ -37,6 +37,7 @@ admin-panel {
     border: 1px solid rgb(60, 60, 60);
     border-radius: 0.25rem;
     color: inherit;
+    cursor: pointer;
     padding: 0.25rem;
   }
   
@@ -204,16 +205,6 @@ admin-panel {
       object-fit: cover;
       width: 100%;
     }
-  }
-
-  .visually-hidden {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
   }
 
   input.visually-hidden:is(:focus, :focus-within) + label {

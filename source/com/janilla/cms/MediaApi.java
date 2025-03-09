@@ -25,6 +25,7 @@ package com.janilla.cms;
 
 import java.nio.file.Path;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import com.janilla.http.HttpResponse;
 import com.janilla.web.Handle;
@@ -36,6 +37,11 @@ public class MediaApi extends CollectionApi<Media> {
 
 	public MediaApi() {
 		super(Media.class);
+	}
+
+	@Handle(method = "GET")
+	public Stream<Media> read() {
+		return crud().read(crud().list());
 	}
 
 	@Handle(method = "GET", path = "file/(.+)")

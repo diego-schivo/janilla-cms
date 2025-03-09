@@ -23,6 +23,9 @@
  */
 package com.janilla.cms;
 
+import java.util.stream.Stream;
+
+import com.janilla.web.Bind;
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/pages")
@@ -30,5 +33,10 @@ public class PageApi extends CollectionApi<Page> {
 
 	public PageApi() {
 		super(Page.class);
+	}
+
+	@Handle(method = "GET")
+	public Stream<Page> read(@Bind("slug") String slug) {
+		return crud().read(slug != null && !slug.isBlank() ? crud().filter("slug", slug) : crud().list());
 	}
 }

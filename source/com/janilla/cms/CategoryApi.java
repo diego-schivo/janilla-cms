@@ -23,6 +23,8 @@
  */
 package com.janilla.cms;
 
+import java.util.stream.Stream;
+
 import com.janilla.web.Handle;
 
 @Handle(path = "/api/categories")
@@ -30,5 +32,10 @@ public class CategoryApi extends CollectionApi<Category> {
 
 	public CategoryApi() {
 		super(Category.class);
+	}
+
+	@Handle(method = "GET")
+	public Stream<Category> read() {
+		return crud().read(crud().list());
 	}
 }

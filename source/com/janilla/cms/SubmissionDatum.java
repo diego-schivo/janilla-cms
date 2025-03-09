@@ -23,5 +23,5 @@
  */
 package com.janilla.cms;
 
-public record FormBlock(@Types(Form.class) Long form, Boolean enableIntro, String introContent) {
+public record SubmissionDatum(String field, String value) {
 }

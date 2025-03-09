@@ -23,5 +23,19 @@
  */
 package com.janilla.cms;
 
-public record FormBlock(@Types(Form.class) Long form, Boolean enableIntro, String introContent) {
+import java.util.stream.Stream;
+
+import com.janilla.web.Handle;
+
+@Handle(path = "/api/redirects")
+public class RedirectApi extends CollectionApi<Redirect> {
+
+	public RedirectApi() {
+		super(Redirect.class);
+	}
+
+	@Handle(method = "GET")
+	public Stream<Redirect> read() {
+		return crud().read(crud().list());
+	}
 }

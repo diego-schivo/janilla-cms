@@ -24,7 +24,6 @@
 package com.janilla.cms;
 
 import java.util.Set;
-import java.util.stream.Stream;
 
 import com.janilla.persistence.Crud;
 import com.janilla.persistence.Persistence;
@@ -48,10 +47,10 @@ public abstract class CollectionApi<E> {
 		return crud().create(entity);
 	}
 
-	@Handle(method = "GET")
-	public Stream<E> read(@Bind("slug") String slug) {
-		return crud().read(slug != null && !slug.isBlank() ? crud().filter("slug", slug) : crud().list());
-	}
+//	@Handle(method = "GET")
+//	public Stream<E> read(@Bind("slug") String slug) {
+//		return crud().read(slug != null && !slug.isBlank() ? crud().filter("slug", slug) : crud().list());
+//	}
 
 	@Handle(method = "GET", path = "(\\d+)")
 	public E read(long id) {

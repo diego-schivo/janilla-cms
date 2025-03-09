@@ -123,21 +123,11 @@ export default class AdminPanel extends UpdatableHTMLElement {
 			s.schema = await (await fetch("/api/schema")).json();
 			if (nn.length === 3 && nn[0] === "collections") {
 				s.t0 = s.schema["Collections"][nn[1]].elementTypes[0];
-				s.data = await (await fetch(`/api/${nn[1]}/${nn[2]}`)).json();
+				s.data = await (await fetch(`/api/${nn[1].split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-")}/${nn[2]}`)).json();
 			} else if (nn.length === 2 && nn[0] === "globals") {
 				s.t0 = s.schema["Globals"][nn[1]].type;
 				s.data = await (await fetch(`/api/${nn[1]}`)).json();
-			}/* else if (nn.length === 0) {
-				s.t0 = Object.keys(s.schema)[0];
-				s.data = JSON.parse(localStorage.getItem("data")) ?? {
-					collections: {
-						pages: []
-					},
-					globals: {
-						header: { $type: "Header" }
-					}
-				};
-			}*/
+			}
 		}
 		this.appendChild(this.interpolateDom({
 			$template: "",
@@ -260,7 +250,19 @@ export default class AdminPanel extends UpdatableHTMLElement {
 							}
 						})()
 						*/
+						data: f.data[n] ??= (() => {
+							switch (p.type) {
+								case "List":
+									return [];
+								case "Long":
+									return p.referenceType ? {} : null;
+								default:
+									return null;
+							}
+						})()
+						/*
 						data: f.data[n]
+						*/
 					};
 				}
 		return f;
@@ -291,10 +293,15 @@ export default class AdminPanel extends UpdatableHTMLElement {
 		switch (entitySlug) {
 			case "media":
 				return ["file", "alt"];
+			case "pages":
+			case "posts":
+				return ["title", "slug"];
+			case "redirects":
+				return ["from"];
 			case "users":
 				return ["name", "email"];
 			default:
-				return ["title", "slug"];
+				return ["title"];
 		}
 	}
 
@@ -311,7 +318,7 @@ export default class AdminPanel extends UpdatableHTMLElement {
 				switch (field.name) {
 					case "confirmationMessage":
 					case "message":
-					case "richText":
+					case "richTextx":
 						return "rich-text-control";
 					case "type":
 					case "appearance":

@@ -29,7 +29,7 @@ import com.janilla.persistence.Store;
 
 @Store
 public record Form(Long id, String title, List<Field> fields, String submitButtonLabel,
-		ConfirmationType confirmationType, String confirmationMessage, List<Email> emails) {
+		ConfirmationType confirmationType, String confirmationMessage, String redirect, List<Email> emails) {
 
 	public enum ConfirmationType {
 

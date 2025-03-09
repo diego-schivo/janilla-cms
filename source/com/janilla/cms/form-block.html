@@ -1,25 +1,33 @@
 <article>
   <!--${intro}-->
-  <template id="intro">
+  <!--${form}-->
+  <!--${confirmation}-->
+</article>
+<template id="intro">
+  <section>
     <!--${introContent}-->
-  </template>
+  </section>
+</template>
+<template id="form">
   <form>
-    <label>
-      Full Name
-      <input name="fullName" />
-    </label>
-    <label>
-      Email
-      <input name="email" />
-    </label>
-    <label>
-      Phone
-      <input name="phone" />
-    </label>
-    <label>
-      Message
-      <textarea name="message"></textarea>
-    </label>
+    <!--${fields}-->
     <button>Submit</button>
   </form>
-</article>
+</template>
+<template id="field">
+  <label>
+    ${label}
+    <!--${control}-->
+  </label>
+</template>
+<template id="input-control">
+  <input type="${type}" name="${name}" />
+</template>
+<template id="textarea-control">
+  <textarea name="${name}" rows="3"></textarea>
+</template>
+<template id="confirmation">
+  <section class="confirmation">
+    <!--${confirmationMessage}-->
+  </section>
+</template>

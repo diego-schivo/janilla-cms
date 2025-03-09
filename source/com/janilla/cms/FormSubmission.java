@@ -23,5 +23,10 @@
  */
 package com.janilla.cms;
 
-public record FormBlock(@Types(Form.class) Long form, Boolean enableIntro, String introContent) {
+import java.util.List;
+
+import com.janilla.persistence.Store;
+
+@Store
+public record FormSubmission(Long id, @Types(Form.class) Long form, List<SubmissionDatum> submissionData) {
 }

@@ -80,7 +80,7 @@ export default class CollectionList extends UpdatableHTMLElement {
 				s.data ??= pe.state.field.data;
 				break;
 			default:
-				s.data ??= await (await fetch(`/api/${n}`)).json();
+				s.data ??= await (await fetch(`/api/${n.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-")}`)).json();
 				break;
 		}
 		const ap = this.closest("admin-panel");
@@ -107,7 +107,7 @@ export default class CollectionList extends UpdatableHTMLElement {
 							} : z
 						};
 					});
-					cc[0].href = `/admin/collections/${n}/${x.id}`;
+					cc[0].href = `/admin/collections/${n.split(/(?=[A-Z])/).map(x => x.toLowerCase()).join("-")}/${x.id}`;
 					if (!cc[0].content)
 						cc[0].content = x.id;
 					return cc;

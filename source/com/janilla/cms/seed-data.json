@@ -35,6 +35,22 @@
 						{
 							"$type": "Column",
 							"richText": "<h3>Admin Dashboard</h3><p>Manage this site's pages and posts from the <a href=\"/admin\">admin dashboard</a>.</p>"
+						},
+						{
+							"$type": "Column",
+							"richText": "<h3>Preview</h3><p>Using versions, drafts, and preview, editors can review and share their changes before publishing them.</p>"
+						},
+						{
+							"$type": "Column",
+							"richText": "<h3>Page Builder</h3><p>Custom page builder allows you to create unique page, post, and project layouts for any type of content.</p>"
+						},
+						{
+							"$type": "Column",
+							"richText": "<h3>SEO</h3><p>Editors have complete control over SEO data and site content directly from the <a href=\"/admin\">admin dashboard</a>.</p>"
+						},
+						{
+							"$type": "Column",
+							"richText": "<h3>Dark Mode</h3><p>Users will experience this site in their preferred color scheme and each block can be inverted.</p>"
 						}
 					]
 				},
@@ -75,6 +91,7 @@
 			"layout": [
 				{
 					"$type": "FormBlock",
+					"form": 1,
 					"introContent": "<h3>Example contact form:</h3>",
 					"enableIntro": "true"
 				}
@@ -218,6 +235,7 @@
 			"password": "password"
 		}
 	],
+	"redirects": [],
 	"forms": [
 		{
 			"$type": "Form",
@@ -274,6 +292,7 @@
 			]
 		}
 	],
+	"formSubmissions": [],
 	"header": {
 		"$type": "Header",
 		"id": 1,

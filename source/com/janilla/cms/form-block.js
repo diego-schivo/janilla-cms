@@ -33,13 +33,66 @@ export default class FormBlock extends UpdatableHTMLElement {
 		super();
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		this.addEventListener("submit", this.handleSubmit);
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this.removeEventListener("submit", this.handleSubmit);
+	}
+
+	handleSubmit = async event => {
+		event.preventDefault();
+		const ee = [...new FormData(event.target).entries()];
+		this.state.submission = await (await fetch("/api/form-submissions", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				$type: "FormSubmission",
+				form: 1,
+				submissionData: ee.map(([k, v]) => ({
+					field: k,
+					value: v
+				}))
+			})
+		})).json();
+		this.requestUpdate();
+	}
+
 	async updateDisplay() {
+		const s = this.state;
 		const d = this.closest("page-element").data(this.dataset.path);
+		if (s.submission && d.form.confirmationType === "REDIRECT") {
+			history.pushState(undefined, "", d.form.redirect);
+			dispatchEvent(new CustomEvent("popstate"));
+			return;
+		}
 		this.appendChild(this.interpolateDom({
 			$template: "",
-			intro: d.enableIntro ? {
+			intro: !s.submission && d.enableIntro ? {
 				$template: "intro",
 				...d
+			} : null,
+			form: !s.submission && d.form ? {
+				$template: "form",
+				fields: d.form.fields.map(x => ({
+					$template: "field",
+					...x,
+					control: (() => {
+						const t = x.$type.split(".")[1].toLowerCase();
+						return {
+							$template: t === "textarea" ? "textarea-control" : "input-control",
+							...x,
+							type: t !== "text" ? t : null
+						};
+					})()
+				}))
+			} : null,
+			confirmation: s.submission ? {
+				$template: "confirmation",
+				...d.form
 			} : null
 		}));
 	}

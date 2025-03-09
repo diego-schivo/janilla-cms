@@ -21,7 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.janilla.cms;
+import { UpdatableHTMLElement } from "./updatable-html-element.js";
 
-public record FormBlock(@Types(Form.class) Long form, Boolean enableIntro, String introContent) {
+export default class Posts extends UpdatableHTMLElement {
+
+	static get templateName() {
+		return "posts";
+	}
+
+	constructor() {
+		super();
+	}
+
+	async updateDisplay() {
+		const pp = await (await fetch("/api/posts")).json();
+		this.appendChild(this.interpolateDom({
+			$template: "",
+			total: pp.length,
+			articles: pp.map(x => ({
+				$template: "article",
+				...x
+			}))
+		}));
+	}
 }
